@@ -34,11 +34,10 @@ if args[1] == "discover" {
 
 let host = args[1]
 
-@MainActor
 func run() async {
     let identity: ClientIdentity
     do {
-        identity = try ClientIdentity.loadOrCreate()
+        identity = try MacKeychainIdentity.loadOrCreate()
     } catch {
         fail("client identity: \(error.localizedDescription)")
     }
@@ -117,8 +116,10 @@ func run() async {
     }
 }
 
+// Keep the CLI off the main actor: the main thread blocks on the semaphore,
+// so a @MainActor task would deadlock.
 let semaphore = DispatchSemaphore(value: 0)
-Task { @MainActor in
+Task.detached {
     await run()
     semaphore.signal()
 }

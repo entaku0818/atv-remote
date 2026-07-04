@@ -1,0 +1,31 @@
+name: ATVRemote
+options:
+  bundleIdPrefix: com.entaku
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  ATVRemoteKit:
+    path: ../../ATVRemoteKit
+targets:
+  ATVRemote:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    dependencies:
+      - package: ATVRemoteKit
+        product: ATVRemoteKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.entaku.atvremote
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: Android TVを検索・操作するためにローカルネットワークを使用します。
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: Info.plist
+      properties:
+        NSLocalNetworkUsageDescription: Android TVを検索・操作するためにローカルネットワークを使用します。
+        NSBonjourServices:
+          - _androidtvremote2._tcp
+        UILaunchScreen: {}

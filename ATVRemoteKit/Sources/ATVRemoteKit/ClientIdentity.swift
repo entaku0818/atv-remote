@@ -27,36 +27,30 @@ public struct ClientIdentity {
     public let certificate: SecCertificate
     public static let defaultLabel = "atv-remote-client"
 
-    /// Loads the identity from the Keychain, generating key + certificate on first use.
-    public static func loadOrCreate(label: String = defaultLabel, commonName: String = "atvremote") throws -> ClientIdentity {
-        if let existing = try? load(label: label) { return existing }
-        try create(label: label, commonName: commonName)
-        return try load(label: label)
+    public init(identity: SecIdentity, certificate: SecCertificate) {
+        self.identity = identity
+        self.certificate = certificate
     }
 
-    public static func load(label: String) throws -> ClientIdentity {
-        // Find our certificate by label, then locate the identity whose
-        // certificate matches (SecIdentityCreateWithCertificate is macOS-only).
-        let certQuery: [String: Any] = [
-            kSecClass as String: kSecClassCertificate,
-            kSecAttrLabel as String: label,
-            kSecReturnRef as String: true,
-        ]
-        var certResult: CFTypeRef?
-        var status = SecItemCopyMatching(certQuery as CFDictionary, &certResult)
-        guard status == errSecSuccess, let certResult else {
-            throw ATVError.keychain(status, "certificate '\(label)' not found")
-        }
-        let certificate = certResult as! SecCertificate
-        let certData = SecCertificateCopyData(certificate) as Data
+    /// Loads the identity from the Keychain, generating key + certificate on first use.
+    public static func loadOrCreate(label: String = defaultLabel, commonName: String = "atvremote") throws -> ClientIdentity {
+        if let existing = try? load(commonName: commonName) { return existing }
+        try create(label: label, commonName: commonName)
+        return try load(commonName: commonName)
+    }
 
+    public static func load(commonName: String) throws -> ClientIdentity {
+        // Enumerate identities and match by the certificate's subject CN.
+        // (Matching by kSecAttrLabel is unreliable: the macOS legacy keychain
+        // ignores the label passed to SecItemAdd for certificates and derives
+        // it from the CN instead.)
         let idQuery: [String: Any] = [
             kSecClass as String: kSecClassIdentity,
             kSecMatchLimit as String: kSecMatchLimitAll,
             kSecReturnRef as String: true,
         ]
         var idResult: CFTypeRef?
-        status = SecItemCopyMatching(idQuery as CFDictionary, &idResult)
+        let status = SecItemCopyMatching(idQuery as CFDictionary, &idResult)
         guard status == errSecSuccess, let identities = idResult as? [SecIdentity] else {
             throw ATVError.keychain(status, "no identities in keychain")
         }
@@ -64,11 +58,11 @@ public struct ClientIdentity {
             var idCert: SecCertificate?
             guard SecIdentityCopyCertificate(identity, &idCert) == errSecSuccess,
                   let idCert else { continue }
-            if SecCertificateCopyData(idCert) as Data == certData {
-                return ClientIdentity(identity: identity, certificate: certificate)
+            if SecCertificateCopySubjectSummary(idCert) as String? == commonName {
+                return ClientIdentity(identity: identity, certificate: idCert)
             }
         }
-        throw ATVError.keychain(errSecItemNotFound, "identity for certificate '\(label)' not found")
+        throw ATVError.keychain(errSecItemNotFound, "identity with CN '\(commonName)' not found")
     }
 
     public static func create(label: String, commonName: String) throws {
@@ -133,8 +127,8 @@ public struct ClientIdentity {
 
 /// Builds a self-signed X.509 v3 certificate mirroring what androidtvremote2
 /// generates (CN, 10-year validity, CA basic constraint, SAN).
-enum SelfSignedCertificate {
-    static func make(privateKey: SecKey, commonName: String) throws -> Data {
+public enum SelfSignedCertificate {
+    public static func make(privateKey: SecKey, commonName: String) throws -> Data {
         guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
             throw ATVError.certificateCreation("cannot derive public key")
         }
