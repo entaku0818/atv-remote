@@ -4,6 +4,32 @@ Android TV Remote Protocol v2 の PoC と、iOSリモコンアプリ化プロジ
 
 MacからLAN内のAndroid TVを発見・ペアリングし、キー送信とTVerのdeep link起動まで実機確認済み（Xiaomi MiTV-MOSR4）。
 
+## 構成
+
+| ディレクトリ | 内容 | 状態 |
+|---|---|---|
+| `poc/` | Python PoC（androidtvremote2利用） | 実機で全項目動作確認済み |
+| `ATVRemoteKit/` | Swiftネイティブ実装（プロトコル自前実装）＋ `atvremote-cli` | 実機で全項目動作確認済み・6単体テストpass |
+| `ios/ATVRemote/` | SwiftUI iOSアプリ | シミュレータで起動・mDNS発見確認済み |
+
+Swift実装は外部依存が SwiftProtobuf のみ。ペアリング（TLS+自己署名クライアント証明書、
+ポート6467）、リモート（ポート6466、キー送信・app link起動）、mDNS発見（NWBrowser）を
+`androidtvremote2` のプロトコルに準拠して自前実装している。
+
+### Swift CLIでの検証
+
+```bash
+cd ATVRemoteKit
+swift test                              # 単体テスト
+swift run atvremote-cli discover        # mDNS発見
+swift run atvremote-cli 192.168.0.159   # ペアリング→REPL（key/home/tver/info/quit）
+```
+
+macOSのCLIは、ad-hoc署名だとログインキーチェーンが秘密鍵署名のたびにプロンプトを出すため、
+`~/.atvremote/cli.keychain`（既知パスワードの専用キーチェーン）を作り partition-list を
+開放してプロンプトなしでTLS署名する（`MacKeychainIdentity`）。iOSアプリはアプリスコープの
+キーチェーンを使うためこの回避は不要。
+
 ## セットアップ
 
 ```bash
