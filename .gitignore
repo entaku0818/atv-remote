@@ -1,3 +1,6 @@
 .venv/
 certs/
 __pycache__/
+.build/
+DerivedData/
+*.xcodeproj
