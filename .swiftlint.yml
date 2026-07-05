@@ -1,0 +1,12 @@
+included:
+  - ATVRemoteKit/Sources
+  - ATVRemoteKit/Tests
+  - ios/ATVRemote/Sources
+
+excluded:
+  - ATVRemoteKit/Sources/ATVRemoteKit/Proto
+  - ATVRemoteKit/.build
+  - ios/ATVRemote/ATVRemote.xcodeproj
+
+disabled_rules:
+  - identifier_name
