@@ -4,7 +4,7 @@ import SwiftUI
 struct RemoteView: View {
     let device: DeviceDiscovery.Device
     @StateObject private var viewModel: RemoteViewModel
-    @State private var tverURL = "https://tver.jp/episodes/"
+    @State private var appLinkURL = "https://tver.jp/episodes/"
 
     init(device: DeviceDiscovery.Device) {
         self.device = device
@@ -18,7 +18,7 @@ struct RemoteView: View {
                 if viewModel.phase == .connected {
                     dpadView
                     systemKeysView
-                    tverView
+                    appLinkView
                 }
             }
             .padding()
@@ -111,21 +111,24 @@ struct RemoteView: View {
         .buttonStyle(.bordered)
     }
 
-    private var tverView: some View {
+    private var appLinkView: some View {
         VStack(spacing: 8) {
-            TextField("TVer エピソードURL", text: $tverURL)
+            Text("TVer・Netflix・YouTube・Prime Video・Disney+・AbemaTVなどのURLを開けます")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            TextField("アプリのURL（例: https://tver.jp/episodes/...）", text: $appLinkURL)
                 .textFieldStyle(.roundedBorder)
                 .keyboardType(.URL)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
             Button {
-                viewModel.launch(tverURL)
+                viewModel.launch(appLinkURL)
             } label: {
-                Label("TVで観る", systemImage: "play.tv")
+                Label("TVで開く", systemImage: "play.tv")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .disabled(!tverURL.hasPrefix("http"))
+            .disabled(!appLinkURL.hasPrefix("http"))
         }
     }
 
