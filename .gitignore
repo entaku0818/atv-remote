@@ -6,3 +6,9 @@ DerivedData/
 *.xcodeproj
 
 .atvremote/
+
+# Android
+android/.gradle/
+android/local.properties
+android/*/build/
+android/build/

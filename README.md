@@ -1,6 +1,6 @@
 # atv-remote
 
-Android TV Remote Protocol v2 の PoC と、iOSリモコンアプリ化プロジェクト。
+Android TV Remote Protocol v2 の PoC と、iOS/Androidリモコンアプリ化プロジェクト。
 
 MacからLAN内のAndroid TVを発見・ペアリングし、キー送信とTVerのdeep link起動まで実機確認済み（Xiaomi MiTV-MOSR4）。
 
@@ -11,10 +11,20 @@ MacからLAN内のAndroid TVを発見・ペアリングし、キー送信とTVer
 | `poc/` | Python PoC（androidtvremote2利用） | 実機で全項目動作確認済み |
 | `ATVRemoteKit/` | Swiftネイティブ実装（プロトコル自前実装）＋ `atvremote-cli` | 実機で全項目動作確認済み・6単体テストpass |
 | `ios/ATVRemote/` | SwiftUI iOSアプリ | シミュレータで起動・mDNS発見確認済み |
+| `android/atvremotekit/` | Kotlin/JVMネイティブ実装（プロトコル自前実装）＋ `cli` | 単体テスト・ビルド確認済み（実機ペアリングは未検証） |
+| `android/app/` | Jetpack Compose Androidアプリ | ビルド・Lint通過（実機/エミュレータでの動作確認は未実施） |
 
 Swift実装は外部依存が SwiftProtobuf のみ。ペアリング（TLS+自己署名クライアント証明書、
 ポート6467）、リモート（ポート6466、キー送信・app link起動）、mDNS発見（NWBrowser）を
 `androidtvremote2` のプロトコルに準拠して自前実装している。
+
+Kotlin実装（`android/atvremotekit/`）も同じ設計で、外部依存はprotobuf-javaのみ。JVMの
+`RSAPublicKey`がmodulus/exponentを直接`BigInteger`で返すため、Swift版の`ASN1.swift`が
+担っていたDERパース（公開鍵の復元）は不要になった一方、自己署名証明書の構築（DERの手組み）
+は`ASN1.kt`としてそのまま移植している。`.proto`は`ios/proto/`を単一のソースとして共有し、
+Gradleの`protobuf`プラグインから参照している（コピーはしない）。証明書はCLIが
+`certs/android/`、Androidアプリが`context.filesDir/atv-remote/`に平文DERで保存する
+（true Android Keystoreは今回未使用 — PoCスコープでCLIと鍵生成ロジックを共有するため）。
 
 ### Swift CLIでの検証
 
@@ -29,6 +39,19 @@ macOSのCLIは、ad-hoc署名だとログインキーチェーンが秘密鍵署
 `~/.atvremote/cli.keychain`（既知パスワードの専用キーチェーン）を作り partition-list を
 開放してプロンプトなしでTLS署名する（`MacKeychainIdentity`）。iOSアプリはアプリスコープの
 キーチェーンを使うためこの回避は不要。
+
+### Android/Kotlin CLIでの検証
+
+```bash
+cd android
+./gradlew :atvremotekit:test           # 単体テスト（ペアリングシークレットはSwift版と同じベクタでクロス検証）
+./gradlew :cli:run --args="192.168.0.159"   # ペアリング→REPL（key/home/tver/info/quit）
+./gradlew :app:lintDebug                # Android Lint
+./gradlew :app:assembleDebug            # APKビルド
+```
+
+`:cli:run` はリポジトリ直下で実行したのと同じ状態になるよう作業ディレクトリを固定しており、
+証明書は `certs/android/`（Python版の `certs/` と同じ発想）に保存される。
 
 ## セットアップ
 
