@@ -7,6 +7,15 @@ on:
     branches: [main]
 
 jobs:
+  swiftlint:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/realm/swiftlint:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run SwiftLint
+        run: swiftlint lint
+
   android:
     runs-on: ubuntu-latest
     defaults:
