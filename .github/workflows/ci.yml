@@ -16,6 +16,23 @@ jobs:
       - name: Run SwiftLint
         run: swiftlint lint
 
+  swift-package:
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: ATVRemoteKit
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache SwiftPM
+        uses: actions/cache@v4
+        with:
+          path: ATVRemoteKit/.build
+          key: ${{ runner.os }}-spm-${{ hashFiles('ATVRemoteKit/Package.resolved') }}
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+
   android:
     runs-on: ubuntu-latest
     defaults:
