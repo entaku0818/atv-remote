@@ -12,6 +12,10 @@ Android TV Remote Protocol v2 の PoC と、iOS/Androidリモコンアプリ化�
 - Android app lint: `cd android && ./gradlew :app:lintDebug`
 - Android app assemble: `cd android && ./gradlew :app:assembleDebug`
 
+CIで回るのは `swiftlint` と `android`（どちらもubuntu-latest）だけ。GitHub ActionsのmacOSランナーは
+全廃したので、**Swift package（`cd ATVRemoteKit && swift build && swift test`）とiOSアプリのビルドは
+ローカルで実行して緑を確認する責任がエージェント側にある**（詳細はREADMEの「CIとローカル検証の分担」）。
+
 ## ループ運用（Loop Engineering）
 
 このリポジトリは memo リポジトリのプロダクトループ（企画→開発→リリース→効果測定→再企画）の対象。
@@ -23,6 +27,7 @@ Android TV Remote Protocol v2 の PoC と、iOS/Androidリモコンアプリ化�
 
 ### ハーネス（検証ゲート）
 - 実装は build / test / lint が緑になるまで自己修正する（コマンド: `swiftlint lint` / `cd ATVRemoteKit && swift build && swift test` / `cd ios/ATVRemote && xcodegen generate && xcodebuild build -project ATVRemote.xcodeproj -scheme ATVRemote -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO` / `cd android && ./gradlew :atvremotekit:test :cli:compileKotlin :app:lintDebug :app:assembleDebug`）
+- このうちCIが自動で検証するのは `swiftlint lint` と Android の4コマンドのみ。**Swift package と iOSアプリはローカル実行が唯一のゲート**なので省略しない
 - **緑でない変更を main に入れない**。5回で緑にならなければブランチに残して報告
 - 完了報告には実行した検証コマンドと実出力を含める（「たぶん動く」は完了ではない）
 

@@ -30,6 +30,7 @@ Gradleの`protobuf`プラグインから参照している（コピーはしな�
 
 ```bash
 cd ATVRemoteKit
+swift build                             # ビルド
 swift test                              # 単体テスト
 swift run atvremote-cli discover        # mDNS発見
 swift run atvremote-cli 192.168.0.159   # ペアリング→REPL（key/home/tver/info/quit）
@@ -52,6 +53,47 @@ cd android
 
 `:cli:run` はリポジトリ直下で実行したのと同じ状態になるよう作業ディレクトリを固定しており、
 証明書は `certs/android/`（Python版の `certs/` と同じ発想）に保存される。
+
+## CIとローカル検証の分担
+
+**GitHub ActionsのmacOSランナーは使わない方針。** macOSランナーはランナーイメージの更新
+（`macos-14`のdeprecated化、デフォルトXcodeのバージョン差）でビルドが壊れやすく、
+Linuxランナーの数倍のコストがかかるため、macOS/Xcodeを必要とする検証はローカルに寄せている。
+
+| 検証対象 | どこで回すか | コマンド |
+|---|---|---|
+| SwiftLint | CI（`swiftlint` / ubuntu-latest） | `swiftlint lint` |
+| Android（Kotlin実装・アプリ） | CI（`android` / ubuntu-latest） | `cd android && ./gradlew :atvremotekit:test :cli:compileKotlin :app:lintDebug :app:assembleDebug` |
+| **ATVRemoteKit（Swift実装）** | **ローカルのみ** | 下記参照 |
+| iOSアプリ（`ios/ATVRemote/`） | **ローカル + Xcode Cloud** | 下記参照 |
+
+### ATVRemoteKitのローカル検証（必須）
+
+`ATVRemoteKit/` に触るPRは、pushする前に必ずローカルで以下を実行して緑を確認する。
+CIにはこのゲートが無いので、ここを飛ばすと壊れたまま気付かずmainに入る。
+
+```bash
+cd ATVRemoteKit
+swift build
+swift test
+```
+
+作業ディレクトリは `ATVRemoteKit/` であることに注意（リポジトリ直下には `Package.swift` が無い）。
+期待される結果は6テスト全passで、`Executed 6 tests, with 0 failures` が出れば緑。
+PRの説明には実行したコマンドとその出力を貼ること。
+
+### iOSアプリのローカル検証
+
+```bash
+cd ios/ATVRemote
+xcodegen generate
+xcodebuild build \
+  -project ATVRemote.xcodeproj \
+  -scheme ATVRemote \
+  -destination 'generic/platform=iOS Simulator' \
+  -configuration Debug \
+  CODE_SIGNING_ALLOWED=NO
+```
 
 ## セットアップ
 
