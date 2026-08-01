@@ -16,25 +16,9 @@ jobs:
       - name: Run SwiftLint
         run: swiftlint lint
 
-  swift-package:
-    runs-on: macos-15
-    defaults:
-      run:
-        working-directory: ATVRemoteKit
-    steps:
-      - uses: actions/checkout@v4
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
-      - name: Cache SwiftPM
-        uses: actions/cache@v4
-        with:
-          path: ATVRemoteKit/.build
-          key: ${{ runner.os }}-spm-${{ hashFiles('ATVRemoteKit/Package.resolved') }}
-      - name: Build
-        run: swift build
-      - name: Test
-        run: swift test
-
+  # ATVRemoteKit（swift build / swift test）はCIでは回さない。
+  # macOSランナーは廃止し、ローカル確認に統一している。手順はREADMEの
+  # 「CIとローカル検証の分担」を参照。
   android:
     runs-on: ubuntu-latest
     defaults:
