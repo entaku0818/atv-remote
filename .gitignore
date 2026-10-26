@@ -12,3 +12,4 @@ android/.gradle/
 android/local.properties
 android/*/build/
 android/build/
+poc/mitm/gen/

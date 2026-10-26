@@ -140,6 +140,11 @@ quit            # 終了
 3. `tver https://tver.jp/episodes/xxxx` → TVerアプリが起動し該当エピソードが再生される
 4. `key DPAD_CENTER` などでリモコン操作
 
+### 通信を覗く（mitmproxy）
+
+port 6466 の通信をmitmproxyで中継し、protobufをデコードして1行ずつ表示する手順は
+[`poc/mitm/README.md`](poc/mitm/README.md) を参照。
+
 ## ハマりどころ
 
 - **ペアリングセッションはTVと1本のみ。** 古い `remote_poc.py` プロセスが残っているとTVは古いコードを表示し続け、新プロセスはSSLハンドシェイクで60秒タイムアウトする。`pgrep -f remote_poc.py` で確認して先に殺すこと。

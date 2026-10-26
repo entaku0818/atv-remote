@@ -2,7 +2,10 @@
 """Android TV Remote Protocol v2 PoC — pair, send keys, launch deep links.
 
 Usage:
-    python poc/remote_poc.py <TV_IP>
+    python poc/remote_poc.py <TV_IP> [API_PORT]
+
+API_PORT defaults to 6466. Pass another port to go through a proxy such as
+mitmproxy (see poc/mitm/README.md).
 
 Flow:
   1. Generate a client certificate (certs/cert.pem, certs/key.pem) if missing.
@@ -119,9 +122,10 @@ async def repl(remote: AndroidTVRemote) -> None:
 
 
 async def main() -> None:
-    if len(sys.argv) != 2:
-        sys.exit(f"Usage: {sys.argv[0]} <TV_IP>")
+    if len(sys.argv) not in (2, 3):
+        sys.exit(f"Usage: {sys.argv[0]} <TV_IP> [API_PORT]")
     host = sys.argv[1]
+    api_port = int(sys.argv[2]) if len(sys.argv) == 3 else 6466
 
     CERT_DIR.mkdir(exist_ok=True)
     remote = AndroidTVRemote(
@@ -129,6 +133,7 @@ async def main() -> None:
         certfile=str(CERT_DIR / "cert.pem"),
         keyfile=str(CERT_DIR / "key.pem"),
         host=host,
+        api_port=api_port,
     )
     if await remote.async_generate_cert_if_missing():
         print(f"Generated new client certificate in {CERT_DIR}/")
