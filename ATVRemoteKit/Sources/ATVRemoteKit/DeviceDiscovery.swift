@@ -25,9 +25,18 @@ public final class DeviceDiscovery: @unchecked Sendable {
             using: NWParameters()
         )
         self.browser = browser
+        browser.stateUpdateHandler = { state in
+            switch state {
+            case .failed(let error), .waiting(let error):
+                ATVLog.error("discovery", "browser \(state): \(error)")
+            default:
+                ATVLog.debug("discovery", "browser \(state)")
+            }
+        }
         browser.browseResultsChangedHandler = { [weak self] results, _ in
             guard let self else { return }
             self.devices = [:]
+            ATVLog.info("discovery", "found \(results.count) service(s)")
             for result in results {
                 if case .service(let name, _, _, _) = result.endpoint {
                     self.devices[name] = Device(name: name, host: nil, port: nil, endpoint: result.endpoint)
@@ -64,6 +73,7 @@ public final class DeviceDiscovery: @unchecked Sendable {
                     case .name(let n, _): hostString = n
                     @unknown default: hostString = "\(host)"
                     }
+                    ATVLog.info("discovery", "resolved \(name) -> \(hostString):\(port)")
                     self.queue.async {
                         self.devices[name] = Device(
                             name: name,
@@ -74,6 +84,9 @@ public final class DeviceDiscovery: @unchecked Sendable {
                         self.notify()
                     }
                 }
+                connection.cancel()
+            } else if case .failed(let error) = state {
+                ATVLog.error("discovery", "resolve \(name) failed: \(error)")
                 connection.cancel()
             }
         }

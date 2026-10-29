@@ -4,7 +4,9 @@ import SwiftUI
 struct RemoteView: View {
     let device: DeviceDiscovery.Device
     @StateObject private var viewModel: RemoteViewModel
-    @State private var appLinkURL = "https://tver.jp/episodes/"
+    @StateObject private var logStore = LogStore.shared
+    @State private var appLinkURL = ""
+    @State private var logCopied = false
 
     init(device: DeviceDiscovery.Device) {
         self.device = device
@@ -16,10 +18,12 @@ struct RemoteView: View {
             VStack(spacing: 24) {
                 statusView
                 if viewModel.phase == .connected {
+                    resultView
                     dpadView
                     systemKeysView
                     appLinkView
                 }
+                logView
             }
             .padding()
         }
@@ -73,37 +77,37 @@ struct RemoteView: View {
 
     private var dpadView: some View {
         VStack(spacing: 8) {
-            keyButton("chevron.up", .keycodeDpadUp)
+            keyButton("chevron.up", .keycodeDpadUp, label: "上")
             HStack(spacing: 8) {
-                keyButton("chevron.left", .keycodeDpadLeft)
+                keyButton("chevron.left", .keycodeDpadLeft, label: "左")
                 Button {
-                    viewModel.send(.keycodeDpadCenter)
+                    viewModel.send(.keycodeDpadCenter, label: "OK")
                 } label: {
                     Text("OK")
                         .font(.headline)
                         .frame(width: 64, height: 64)
                 }
                 .buttonStyle(.borderedProminent)
-                keyButton("chevron.right", .keycodeDpadRight)
+                keyButton("chevron.right", .keycodeDpadRight, label: "右")
             }
-            keyButton("chevron.down", .keycodeDpadDown)
+            keyButton("chevron.down", .keycodeDpadDown, label: "下")
         }
     }
 
     private var systemKeysView: some View {
         HStack(spacing: 16) {
             Button {
-                viewModel.send(.keycodeBack)
+                viewModel.send(.keycodeBack, label: "戻る")
             } label: {
                 Label("戻る", systemImage: "arrow.uturn.backward")
             }
             Button {
-                viewModel.send(.keycodeHome)
+                viewModel.send(.keycodeHome, label: "ホーム")
             } label: {
                 Label("ホーム", systemImage: "house")
             }
             Button {
-                viewModel.send(.keycodePower)
+                viewModel.send(.keycodePower, label: "電源")
             } label: {
                 Label("電源", systemImage: "power")
             }
@@ -132,9 +136,72 @@ struct RemoteView: View {
         }
     }
 
-    private func keyButton(_ systemImage: String, _ key: Remote_RemoteKeyCode) -> some View {
+    @ViewBuilder
+    private var resultView: some View {
+        if let result = viewModel.result {
+            Label(result.text, systemImage: Self.icon(for: result.kind))
+                .font(.callout)
+                .foregroundStyle(Self.color(for: result.kind))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(12)
+                .background(Self.color(for: result.kind).opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+                .animation(.default, value: result)
+        }
+    }
+
+    private var logView: some View {
+        DisclosureGroup("ログ（\(logStore.lines.count)）") {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 16) {
+                    Button {
+                        UIPasteboard.general.string = logStore.allText
+                        logCopied = true
+                    } label: {
+                        Label(logCopied ? "コピーしました" : "全部コピー", systemImage: logCopied ? "checkmark" : "doc.on.doc")
+                    }
+                    .disabled(logStore.lines.isEmpty)
+                    ShareLink(item: logStore.allText) {
+                        Label("共有", systemImage: "square.and.arrow.up")
+                    }
+                    Spacer()
+                    Button("クリア", role: .destructive) { logStore.clear() }
+                }
+                .font(.caption)
+                ForEach(logStore.lines.reversed()) { line in
+                    Text(line.text)
+                        .font(.caption2.monospaced())
+                        .foregroundStyle(line.entry.level == .error ? Color.red : Color.primary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .textSelection(.enabled)
+                }
+            }
+            .padding(.top, 8)
+        }
+        .font(.callout)
+        .onChange(of: logStore.lines.count) { logCopied = false }
+    }
+
+    private static func icon(for kind: ResultMessage.Kind) -> String {
+        switch kind {
+        case .info: return "paperplane"
+        case .success: return "checkmark.circle.fill"
+        case .warning: return "exclamationmark.circle"
+        case .failure: return "xmark.octagon.fill"
+        }
+    }
+
+    private static func color(for kind: ResultMessage.Kind) -> Color {
+        switch kind {
+        case .info: return .blue
+        case .success: return .green
+        case .warning: return .orange
+        case .failure: return .red
+        }
+    }
+
+    private func keyButton(_ systemImage: String, _ key: Remote_RemoteKeyCode, label: String) -> some View {
         Button {
-            viewModel.send(key)
+            viewModel.send(key, label: label)
         } label: {
             Image(systemName: systemImage)
                 .frame(width: 64, height: 64)

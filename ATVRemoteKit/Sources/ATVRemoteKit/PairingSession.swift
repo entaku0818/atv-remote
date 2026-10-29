@@ -34,6 +34,7 @@ public final class PairingSession: @unchecked Sendable {
             var msg = newMessage()
             msg.pairingRequest.clientName = clientName
             msg.pairingRequest.serviceName = "atvremote"
+            ATVLog.info("pairing", "send pairing_request (client \(clientName))")
             send(msg)
         }
     }
@@ -55,12 +56,14 @@ public final class PairingSession: @unchecked Sendable {
             queue.sync { self.finishedContinuation = cont }
             var msg = newMessage()
             msg.secret.secret = secret
+            ATVLog.info("pairing", "send secret")
             send(msg)
         }
         connection.cancel()
     }
 
     public func cancel() {
+        ATVLog.info("pairing", "cancel requested")
         connection.cancel()
     }
 
@@ -88,6 +91,7 @@ public final class PairingSession: @unchecked Sendable {
             return
         }
         if msg.hasPairingRequestAck {
+            ATVLog.info("pairing", "pairing_request_ack; send options")
             var reply = newMessage()
             reply.options.preferredRole = .input
             var encoding = Polo_Wire_Protobuf_Options.Encoding()
@@ -96,14 +100,17 @@ public final class PairingSession: @unchecked Sendable {
             reply.options.inputEncodings = [encoding]
             send(reply)
         } else if msg.hasOptions {
+            ATVLog.info("pairing", "options; send configuration")
             var reply = newMessage()
             reply.configuration.clientRole = .input
             reply.configuration.encoding.type = .hexadecimal
             reply.configuration.encoding.symbolLength = 6
             send(reply)
         } else if msg.hasConfigurationAck {
+            ATVLog.info("pairing", "configuration_ack; code should be on the TV screen")
             resumeCodeDisplayed(nil)
         } else if msg.hasSecretAck {
+            ATVLog.info("pairing", "secret_ack; paired")
             resumeFinished(nil)
         } else {
             fail(ATVError.pairingFailed("unhandled message"))
@@ -129,6 +136,7 @@ public final class PairingSession: @unchecked Sendable {
     }
 
     private func fail(_ error: Error) {
+        ATVLog.error("pairing", "failed: \(error.localizedDescription)")
         resumeCodeDisplayed(error)
         resumeFinished(error)
     }

@@ -7,6 +7,7 @@ import Security
 /// server certificate (capturing it for the pairing secret).
 final class ProtobufConnection: @unchecked Sendable {
     private let connection: NWConnection
+    private let label: String
     private let queue = DispatchQueue(label: "atvremotekit.connection")
     private var framer = MessageFramer()
 
@@ -29,6 +30,7 @@ final class ProtobufConnection: @unchecked Sendable {
     var onClosed: ((Error?) -> Void)?
 
     init(host: String, port: UInt16, identity: ClientIdentity) {
+        label = "\(host):\(port)"
         let tls = NWProtocolTLS.Options()
         let options = tls.securityProtocolOptions
         if let secIdentity = sec_identity_create(identity.identity) {
@@ -59,23 +61,32 @@ final class ProtobufConnection: @unchecked Sendable {
     func start() async throws {
         try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
             var resumed = false
+            let label = label
             connection.stateUpdateHandler = { [weak self] state in
                 switch state {
                 case .ready:
+                    ATVLog.info("connection", "\(label) ready (TLS established)")
                     if !resumed { resumed = true; cont.resume() }
                 case .failed(let error):
+                    ATVLog.error("connection", "\(label) failed: \(error)")
                     if !resumed { resumed = true; cont.resume(throwing: error) }
                     self?.onClosed?(error)
                 case .cancelled:
+                    ATVLog.info("connection", "\(label) cancelled")
                     if !resumed {
                         resumed = true
                         cont.resume(throwing: ATVError.connectionClosed("cancelled"))
                     }
                     self?.onClosed?(nil)
+                case .waiting(let error):
+                    ATVLog.error("connection", "\(label) waiting: \(error)")
+                case .preparing:
+                    ATVLog.debug("connection", "\(label) preparing")
                 default:
                     break
                 }
             }
+            ATVLog.info("connection", "\(label) connecting")
             connection.start(queue: queue)
         }
         receiveLoop()
@@ -90,10 +101,12 @@ final class ProtobufConnection: @unchecked Sendable {
                 }
             }
             if let error {
+                ATVLog.error("connection", "\(self.label) receive error: \(error)")
                 self.onClosed?(error)
                 return
             }
             if isComplete {
+                ATVLog.info("connection", "\(self.label) closed by TV (EOF)")
                 self.onClosed?(ATVError.connectionClosed("EOF"))
                 return
             }
@@ -102,7 +115,12 @@ final class ProtobufConnection: @unchecked Sendable {
     }
 
     func send(_ message: Data) {
-        connection.send(content: MessageFramer.frame(message), completion: .contentProcessed { _ in })
+        let label = label
+        connection.send(content: MessageFramer.frame(message), completion: .contentProcessed { error in
+            if let error {
+                ATVLog.error("connection", "\(label) send failed: \(error)")
+            }
+        })
     }
 
     func cancel() {

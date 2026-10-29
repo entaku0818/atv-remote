@@ -13,3 +13,4 @@ android/local.properties
 android/*/build/
 android/build/
 poc/mitm/gen/
+ios/ATVRemote/build/
