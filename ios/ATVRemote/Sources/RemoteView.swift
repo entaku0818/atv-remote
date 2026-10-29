@@ -5,6 +5,8 @@ struct RemoteView: View {
     let device: DeviceDiscovery.Device
     @StateObject private var viewModel: RemoteViewModel
     @StateObject private var logStore = LogStore.shared
+    @StateObject private var history = LinkHistory.shared
+    @Environment(\.scenePhase) private var scenePhase
     @State private var appLinkURL = ""
     @State private var logCopied = false
 
@@ -30,6 +32,11 @@ struct RemoteView: View {
         .navigationTitle(device.name)
         .task { await viewModel.connect() }
         .onDisappear { viewModel.disconnect() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                Task { await viewModel.reconnectIfNeeded() }
+            }
+        }
     }
 
     @ViewBuilder
@@ -120,11 +127,14 @@ struct RemoteView: View {
             Text("TVer・Netflix・YouTube・Prime Video・Disney+・AbemaTVなどのURLを開けます")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            TextField("アプリのURL（例: https://tver.jp/episodes/...）", text: $appLinkURL)
-                .textFieldStyle(.roundedBorder)
-                .keyboardType(.URL)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
+            HStack(spacing: 8) {
+                TextField("アプリのURL（例: https://tver.jp/episodes/...）", text: $appLinkURL)
+                    .textFieldStyle(.roundedBorder)
+                    .keyboardType(.URL)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                historyMenu
+            }
             Button {
                 viewModel.launch(appLinkURL)
             } label: {
@@ -133,6 +143,32 @@ struct RemoteView: View {
             }
             .buttonStyle(.borderedProminent)
             .disabled(!appLinkURL.hasPrefix("http"))
+        }
+    }
+
+    private var historyMenu: some View {
+        Menu {
+            if history.items.isEmpty {
+                Text("まだ履歴はありません")
+            } else {
+                Section("送った履歴（タップで入力欄へ）") {
+                    ForEach(history.items) { item in
+                        Button {
+                            appLinkURL = item.url
+                        } label: {
+                            Text(item.url)
+                            Text(item.sentAt.formatted(date: .abbreviated, time: .shortened))
+                        }
+                    }
+                }
+                Button("履歴を消去", systemImage: "trash", role: .destructive) {
+                    history.clear()
+                }
+            }
+        } label: {
+            Image(systemName: "clock.arrow.circlepath")
+                .font(.title3)
+                .accessibilityLabel("送った履歴")
         }
     }
 

@@ -126,6 +126,7 @@ final class RemoteViewModel: ObservableObject {
             return
         }
         remote.launchApp(url)
+        LinkHistory.shared.add(url)
         pendingLaunch = (url, currentApp)
         result = ResultMessage(kind: .info, text: "送信しました。TVの反応を待っています…")
         launchTimeoutTask?.cancel()
@@ -183,6 +184,14 @@ final class RemoteViewModel: ObservableObject {
 
     private func log(_ message: String) {
         ATVLog.info("app", message)
+    }
+
+    /// Called when the app returns to the foreground. iOS drops sockets in the
+    /// background, so reconnect if the session was lost while away.
+    func reconnectIfNeeded() async {
+        guard case .failed = phase else { return }
+        log("app became active; reconnecting")
+        await connect()
     }
 
     func disconnect() {
