@@ -1,5 +1,7 @@
 # atv-remote
 
+日本語 | [English](README.en.md)
+
 Android TV Remote Protocol v2 を自前実装したリモコン（Swift / Kotlin / Python PoC）。
 LAN内のAndroid TVを発見・ペアリングし、キー送信とアプリのdeep link起動（TVer等）ができる。
 
