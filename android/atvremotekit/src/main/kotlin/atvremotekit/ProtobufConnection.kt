@@ -2,6 +2,7 @@ package atvremotekit
 
 import com.google.protobuf.MessageLite
 import java.io.IOException
+import java.net.InetSocketAddress
 import java.net.Socket
 import java.security.cert.X509Certificate
 import java.util.concurrent.Executors
@@ -9,6 +10,14 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocket
 import javax.net.ssl.X509KeyManager
 import javax.net.ssl.X509TrustManager
+
+internal interface RemoteConnection {
+    var onMessage: ((ByteArray) -> Unit)?
+    var onClosed: ((Throwable?) -> Unit)?
+    fun connect()
+    fun send(message: MessageLite)
+    fun cancel()
+}
 
 /**
  * TLS connection to an Android TV that sends/receives varint-length-prefixed
@@ -19,7 +28,7 @@ import javax.net.ssl.X509TrustManager
  * own delimited I/O (writeDelimitedTo/parseDelimitedFrom), so there is no
  * Kotlin equivalent of Varint.swift/MessageFramer.
  */
-class ProtobufConnection(private val host: String, private val port: Int, private val identity: ClientIdentity) {
+class ProtobufConnection(private val host: String, private val port: Int, private val identity: ClientIdentity) : RemoteConnection {
     private val executor = Executors.newSingleThreadExecutor { r -> Thread(r, "atvremotekit-connection").apply { isDaemon = true } }
 
     @Volatile private var socket: SSLSocket? = null
@@ -27,10 +36,10 @@ class ProtobufConnection(private val host: String, private val port: Int, privat
     @Volatile var serverCertificate: X509Certificate? = null
         private set
 
-    var onMessage: ((ByteArray) -> Unit)? = null
-    var onClosed: ((Throwable?) -> Unit)? = null
+    override var onMessage: ((ByteArray) -> Unit)? = null
+    override var onClosed: ((Throwable?) -> Unit)? = null
 
-    fun connect() {
+    override fun connect() {
         val keyManager = SingleIdentityKeyManager(identity)
         val trustManager = object : X509TrustManager {
             override fun checkClientTrusted(chain: Array<out X509Certificate>, authType: String) {}
@@ -45,12 +54,20 @@ class ProtobufConnection(private val host: String, private val port: Int, privat
 
         val context = SSLContext.getInstance("TLS")
         context.init(arrayOf<javax.net.ssl.KeyManager>(keyManager), arrayOf<javax.net.ssl.TrustManager>(trustManager), null)
-        val sslSocket = context.socketFactory.createSocket(host, port) as SSLSocket
-        sslSocket.enabledProtocols = arrayOf("TLSv1.3", "TLSv1.2")
-        sslSocket.tcpNoDelay = true
-        sslSocket.startHandshake()
+        val sslSocket = context.socketFactory.createSocket() as SSLSocket
         socket = sslSocket
-        executor.execute { receiveLoop(sslSocket) }
+        try {
+            sslSocket.enabledProtocols = arrayOf("TLSv1.3", "TLSv1.2")
+            sslSocket.tcpNoDelay = true
+            sslSocket.connect(InetSocketAddress(host, port), 10_000)
+            sslSocket.soTimeout = 10_000
+            sslSocket.startHandshake()
+            sslSocket.soTimeout = 0
+            executor.execute { receiveLoop(sslSocket) }
+        } catch (error: Exception) {
+            cancel()
+            throw error
+        }
     }
 
     private fun receiveLoop(sslSocket: SSLSocket) {
@@ -88,7 +105,7 @@ class ProtobufConnection(private val host: String, private val port: Int, privat
         return bytes
     }
 
-    fun send(message: MessageLite) {
+    override fun send(message: MessageLite) {
         val s = socket ?: return
         synchronized(s) {
             try {
@@ -100,7 +117,7 @@ class ProtobufConnection(private val host: String, private val port: Int, privat
         }
     }
 
-    fun cancel() {
+    override fun cancel() {
         try {
             socket?.close()
         } catch (_: IOException) {

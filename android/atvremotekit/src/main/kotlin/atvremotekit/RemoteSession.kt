@@ -15,7 +15,10 @@ import remote.Remotemessage.RemoteMessage
  * Swift identifiers), protobuf-java keeps the proto enum constant names
  * verbatim (`KEYCODE_DPAD_UP`), so [sendKey] needs no case-conversion.
  */
-class RemoteSession(host: String, port: Int = 6466, private val identity: ClientIdentity) {
+class RemoteSession internal constructor(private val connection: RemoteConnection) {
+    constructor(host: String, port: Int = 6466, identity: ClientIdentity) :
+        this(ProtobufConnection(host, port, identity))
+
     data class DeviceInfo(val vendor: String, val model: String, val version: String)
 
     companion object {
@@ -24,8 +27,7 @@ class RemoteSession(host: String, port: Int = 6466, private val identity: Client
     }
 
     private var activeFeatures = REQUESTED_FEATURES
-    private val connection = ProtobufConnection(host, port, identity)
-    private var startedDeferred: CompletableDeferred<Unit>? = null
+    @Volatile private var startedDeferred: CompletableDeferred<Unit>? = null
 
     var deviceInfo: DeviceInfo? = null
         private set
@@ -49,14 +51,24 @@ class RemoteSession(host: String, port: Int = 6466, private val identity: Client
             resumeStarted(ATVError.ConnectionClosed(error?.message ?: "closed"))
             onClosed?.invoke(error)
         }
-        withContext(Dispatchers.IO) { connection.connect() }
+        // Register before starting the receive loop: the TV can reply immediately.
         val deferred = CompletableDeferred<Unit>()
         startedDeferred = deferred
-        // The TV speaks first (remote_configure); nothing to send here.
-        deferred.await()
+        try {
+            withContext(Dispatchers.IO) { connection.connect() }
+            deferred.await()
+        } catch (error: Exception) {
+            connection.cancel()
+            throw error
+        } finally {
+            startedDeferred = null
+        }
     }
 
-    fun disconnect() = connection.cancel()
+    fun disconnect() {
+        resumeStarted(ATVError.ConnectionClosed("disconnected"))
+        connection.cancel()
+    }
 
     fun sendKey(keyCode: RemoteKeyCode, direction: RemoteDirection = RemoteDirection.SHORT) {
         send(
@@ -134,7 +146,6 @@ class RemoteSession(host: String, port: Int = 6466, private val identity: Client
 
     private fun resumeStarted(error: Throwable?) {
         startedDeferred?.let { d ->
-            startedDeferred = null
             if (error != null) d.completeExceptionally(error) else d.complete(Unit)
         }
     }
