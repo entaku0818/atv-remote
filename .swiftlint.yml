@@ -2,6 +2,8 @@ included:
   - ATVRemoteKit/Sources
   - ATVRemoteKit/Tests
   - ios/ATVRemote/Sources
+  - ios/ATVRemote/Tests
+  - ios/ATVRemote/UITests
 
 excluded:
   - ATVRemoteKit/Sources/ATVRemoteKit/Proto

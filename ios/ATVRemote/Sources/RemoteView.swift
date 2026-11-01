@@ -4,11 +4,11 @@ import SwiftUI
 struct RemoteView: View {
     let device: DeviceDiscovery.Device
     @StateObject private var viewModel: RemoteViewModel
-    @StateObject private var logStore = LogStore.shared
     @StateObject private var history = LinkHistory.shared
     @Environment(\.scenePhase) private var scenePhase
     @State private var appLinkURL = ""
-    @State private var logCopied = false
+    @EnvironmentObject private var purchases: PurchaseStore
+    @State private var showUpgrade = false
 
     init(device: DeviceDiscovery.Device) {
         self.device = device
@@ -23,18 +23,32 @@ struct RemoteView: View {
                     resultView
                     dpadView
                     systemKeysView
-                    appLinkView
+                    if purchases.isUnlocked {
+                        volumeView
+                        appLinkView
+                    } else {
+                        Button("全機能を解除", systemImage: "lock.open") { showUpgrade = true }
+                            .buttonStyle(.bordered)
+                        Text("方向キー・決定・戻るは無料で使えます。")
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
                 }
-                logView
+                #if DEBUG
+                DiagnosticsView()
+                #endif
             }
             .padding()
         }
         .navigationTitle(device.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showUpgrade) { UpgradeView() }
         .task { await viewModel.connect() }
         .onDisappear { viewModel.disconnect() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 Task { await viewModel.reconnectIfNeeded() }
+            } else if phase == .background {
+                viewModel.disconnect()
             }
         }
     }
@@ -57,6 +71,7 @@ struct RemoteView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(viewModel.pairingCode.count != 6 || viewModel.phase == .pairing)
+                if viewModel.phase == .pairing { ProgressView("ペアリング中…") }
             }
         case .connected:
             VStack(spacing: 4) {
@@ -95,6 +110,7 @@ struct RemoteView: View {
                         .frame(width: 64, height: 64)
                 }
                 .buttonStyle(.borderedProminent)
+                .accessibilityLabel("決定")
                 keyButton("chevron.right", .keycodeDpadRight, label: "右")
             }
             keyButton("chevron.down", .keycodeDpadDown, label: "下")
@@ -102,19 +118,27 @@ struct RemoteView: View {
     }
 
     private var systemKeysView: some View {
-        HStack(spacing: 16) {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) { systemButtons }
+            VStack(spacing: 12) { systemButtons }
+        }
+        .buttonStyle(.bordered)
+    }
+
+    private var systemButtons: some View {
+        Group {
             Button {
                 viewModel.send(.keycodeBack, label: "戻る")
             } label: {
                 Label("戻る", systemImage: "arrow.uturn.backward")
             }
             Button {
-                viewModel.send(.keycodeHome, label: "ホーム")
+                premiumKey(.keycodeHome, label: "ホーム")
             } label: {
-                Label("ホーム", systemImage: "house")
+                Label("ホーム", systemImage: purchases.isUnlocked ? "house" : "lock")
             }
             Button {
-                viewModel.send(.keycodePower, label: "電源")
+                premiumKey(.keycodePower, label: "電源")
             } label: {
                 Label("電源", systemImage: "power")
             }
@@ -124,7 +148,7 @@ struct RemoteView: View {
 
     private var appLinkView: some View {
         VStack(spacing: 8) {
-            Text("TVer・Netflix・YouTube・Prime Video・Disney+・AbemaTVなどのURLを開けます")
+            Text("TVに対応アプリがある動画URLを送れます。すべてのURLの再生を保証するものではありません。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             HStack(spacing: 8) {
@@ -136,13 +160,14 @@ struct RemoteView: View {
                 historyMenu
             }
             Button {
+                guard purchases.isUnlocked else { showUpgrade = true; return }
                 viewModel.launch(appLinkURL)
             } label: {
                 Label("TVで開く", systemImage: "play.tv")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .disabled(!appLinkURL.hasPrefix("http"))
+            .disabled(RemoteInput.linkError(appLinkURL.trimmingCharacters(in: .whitespacesAndNewlines)) != nil)
         }
     }
 
@@ -185,38 +210,6 @@ struct RemoteView: View {
         }
     }
 
-    private var logView: some View {
-        DisclosureGroup("ログ（\(logStore.lines.count)）") {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 16) {
-                    Button {
-                        UIPasteboard.general.string = logStore.allText
-                        logCopied = true
-                    } label: {
-                        Label(logCopied ? "コピーしました" : "全部コピー", systemImage: logCopied ? "checkmark" : "doc.on.doc")
-                    }
-                    .disabled(logStore.lines.isEmpty)
-                    ShareLink(item: logStore.allText) {
-                        Label("共有", systemImage: "square.and.arrow.up")
-                    }
-                    Spacer()
-                    Button("クリア", role: .destructive) { logStore.clear() }
-                }
-                .font(.caption)
-                ForEach(logStore.lines.reversed()) { line in
-                    Text(line.text)
-                        .font(.caption2.monospaced())
-                        .foregroundStyle(line.entry.level == .error ? Color.red : Color.primary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .textSelection(.enabled)
-                }
-            }
-            .padding(.top, 8)
-        }
-        .font(.callout)
-        .onChange(of: logStore.lines.count) { logCopied = false }
-    }
-
     private static func icon(for kind: ResultMessage.Kind) -> String {
         switch kind {
         case .info: return "paperplane"
@@ -242,6 +235,23 @@ struct RemoteView: View {
             Image(systemName: systemImage)
                 .frame(width: 64, height: 64)
         }
+        .accessibilityLabel(label)
         .buttonStyle(.bordered)
+    }
+
+    private var volumeView: some View {
+        HStack {
+            Button("音量を下げる", systemImage: "speaker.minus") { premiumKey(.keycodeVolumeDown, label: "音量を下げる") }
+            Button("消音", systemImage: "speaker.slash") { premiumKey(.keycodeVolumeMute, label: "消音") }
+            Button("音量を上げる", systemImage: "speaker.plus") { premiumKey(.keycodeVolumeUp, label: "音量を上げる") }
+        }
+        .labelStyle(.iconOnly)
+        .buttonStyle(.bordered)
+        .controlSize(.large)
+    }
+
+    private func premiumKey(_ key: Remote_RemoteKeyCode, label: String) {
+        guard purchases.isUnlocked else { showUpgrade = true; return }
+        viewModel.send(key, label: label)
     }
 }
