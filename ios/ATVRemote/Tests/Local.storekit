@@ -1,0 +1,33 @@
+{
+  "identifier": "719CBF36-6FD9-44DE-92AB-5874D112799B",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "480",
+      "familyShareable": false,
+      "internalID": "4800000001",
+      "localizations": [
+        {
+          "description": "ホーム・音量・電源・URL起動を解除します。月額料金はありません。",
+          "displayName": "全機能を解除",
+          "locale": "ja"
+        }
+      ],
+      "productID": "com.entaku.atvremote.fullunlock",
+      "referenceName": "Full Unlock",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {
+    "_applicationInternalID": "4800000000",
+    "_failTransactionsEnabled": false,
+    "_locale": "ja_JP",
+    "_storefront": "JPN",
+    "_storeKitErrors": []
+  },
+  "subscriptionGroups": [],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}
