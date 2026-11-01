@@ -7,11 +7,16 @@ import atvremotekit.ClientIdentity
 import atvremotekit.PairingSession
 import atvremotekit.RemoteSession
 import java.io.File
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import remote.Remotemessage.RemoteKeyCode
 
 sealed class RemotePhase {
@@ -41,17 +46,29 @@ class RemoteViewModel(private val host: String, private val identityDir: File) {
     var currentApp: String by mutableStateOf("")
         private set
 
+    private var operation: Job? = null
     private var identity: ClientIdentity? = null
     private var remote: RemoteSession? = null
     private var pairing: PairingSession? = null
 
     fun connect() {
+        disconnect()
+        identity = null
+        pairingCode = ""
+        currentApp = ""
+        deviceDescription = ""
         phase = RemotePhase.Connecting
-        scope.launch {
+        operation = scope.launch {
             try {
-                val id = ClientIdentity.loadOrCreate(File(identityDir, "key.der"), File(identityDir, "cert.der"))
+                val id = withContext(Dispatchers.IO) {
+                    ClientIdentity.loadOrCreate(File(identityDir, "key.der"), File(identityDir, "cert.der"))
+                }
                 identity = id
                 connectRemote(id)
+            } catch (e: TimeoutCancellationException) {
+                phase = RemotePhase.Failed("TVが応答しません。同じネットワークとTVの電源を確認してください")
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 // Not paired yet (or the TV rejected the certificate) — start pairing.
                 startPairing()
@@ -61,9 +78,26 @@ class RemoteViewModel(private val host: String, private val identityDir: File) {
 
     private suspend fun connectRemote(identity: ClientIdentity) {
         val session = RemoteSession(host, identity = identity)
-        session.onCurrentAppUpdated = { app -> currentApp = app }
-        session.connect()
         remote = session
+        session.onCurrentAppUpdated = { app ->
+            scope.launch { if (remote === session) currentApp = app }
+        }
+        session.onClosed = { error ->
+            scope.launch {
+                if (remote === session && phase == RemotePhase.Connected) {
+                    remote = null
+                    session.disconnect()
+                    phase = RemotePhase.Failed("TVとの接続が切れました。再接続してください: ${error?.message ?: "接続終了"}")
+                }
+            }
+        }
+        try {
+            withTimeout(15_000) { session.connect() }
+        } catch (error: Exception) {
+            if (remote === session) remote = null
+            session.disconnect()
+            throw error
+        }
         session.deviceInfo?.let { info ->
             deviceDescription = "${info.vendor} ${info.model} (sw ${info.version})"
         }
@@ -76,26 +110,41 @@ class RemoteViewModel(private val host: String, private val identityDir: File) {
             phase = RemotePhase.Failed("証明書の準備に失敗しました")
             return
         }
+        val session = PairingSession(host, clientName = "ATVRemote Android", identity = id)
+        pairing = session
         try {
-            val session = PairingSession(host, clientName = "ATVRemote Android", identity = id)
-            pairing = session
-            session.start()
+            withTimeout(15_000) { session.start() }
             phase = RemotePhase.PairingCodeRequired
+        } catch (e: CancellationException) {
+            session.cancel()
+            if (pairing === session) pairing = null
+            if (e !is TimeoutCancellationException) throw e
+            phase = RemotePhase.Failed("TVにコードを表示できませんでした。TVの電源とネットワークを確認してください")
         } catch (e: Exception) {
+            session.cancel()
+            if (pairing === session) pairing = null
             phase = RemotePhase.Failed("ペアリング開始に失敗: ${e.message}")
         }
     }
 
     fun submitPairingCode() {
+        if (phase != RemotePhase.PairingCodeRequired) return
         val session = pairing ?: return
         val id = identity ?: return
         phase = RemotePhase.Pairing
-        scope.launch {
+        operation = scope.launch {
             try {
-                session.finish(pairingCode)
+                withTimeout(15_000) { session.finish(pairingCode) }
                 pairing = null
                 connectRemote(id)
+            } catch (e: CancellationException) {
+                session.cancel()
+                if (pairing === session) pairing = null
+                if (e !is TimeoutCancellationException) throw e
+                phase = RemotePhase.Failed("TVの応答がありません。再接続してください")
             } catch (e: Exception) {
+                session.cancel()
+                pairing = null
                 phase = RemotePhase.Failed("ペアリング失敗: ${e.message}")
             }
         }
@@ -110,9 +159,14 @@ class RemoteViewModel(private val host: String, private val identityDir: File) {
     }
 
     fun disconnect() {
+        operation?.cancel()
+        operation = null
         pairing?.cancel()
-        remote?.disconnect()
+        pairing = null
+        val previous = remote
         remote = null
+        previous?.disconnect()
+        phase = RemotePhase.Idle
     }
 
     fun close() {

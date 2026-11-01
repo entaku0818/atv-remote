@@ -41,6 +41,12 @@ fun DeviceListScreen(onSelectDevice: (DeviceDiscovery.Device) -> Unit) {
         topBar = { TopAppBar(title = { Text("デバイス") }) },
     ) { padding ->
         LazyColumn(modifier = Modifier.fillMaxSize().padding(padding)) {
+            item {
+                Text(
+                    "スマホとTVを同じネットワークにつないでください。TVを選ぶと、TV画面に表示されるコードを入力して接続します。",
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
             if (devices.isEmpty()) {
                 item {
                     Row(
@@ -48,7 +54,11 @@ fun DeviceListScreen(onSelectDevice: (DeviceDiscovery.Device) -> Unit) {
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         CircularProgressIndicator(modifier = Modifier.padding(end = 8.dp))
-                        Text("Android TVを検索中…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            "Android TVを検索中…\n見つからない場合はTVの電源とネットワークを確認してください。" +
+                                "TVのネットワーク初期設定は先に完了する必要があります。",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     }
                 }
             }
