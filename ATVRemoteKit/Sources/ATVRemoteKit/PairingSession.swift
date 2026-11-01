@@ -17,7 +17,7 @@ public final class PairingSession: @unchecked Sendable {
         self.host = host
         self.clientName = clientName
         self.identity = identity
-        self.connection = ProtobufConnection(host: host, port: port, identity: identity)
+        self.connection = ProtobufConnection(host: host, port: port, identity: identity, acceptUnpairedServer: true)
     }
 
     /// Connects and drives pairing until the TV displays the 6-digit code.
@@ -57,6 +57,7 @@ public final class PairingSession: @unchecked Sendable {
         msg.secret.secret = secret
         send(msg)
         try await finished.wait()
+        try ServerCertificateStore.save(SecCertificateCopyData(serverCert) as Data, host: host)
     }
 
     public func cancel() {

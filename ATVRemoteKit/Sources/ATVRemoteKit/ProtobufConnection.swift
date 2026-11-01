@@ -29,7 +29,7 @@ final class ProtobufConnection: @unchecked Sendable {
     var onMessage: ((Data) -> Void)?
     var onClosed: ((Error?) -> Void)?
 
-    init(host: String, port: UInt16, identity: ClientIdentity) {
+    init(host: String, port: UInt16, identity: ClientIdentity, acceptUnpairedServer: Bool = false) {
         label = "\(host):\(port)"
         let tls = NWProtocolTLS.Options()
         let options = tls.securityProtocolOptions
@@ -44,8 +44,14 @@ final class ProtobufConnection: @unchecked Sendable {
                let leaf = chain.first {
                 box.value = leaf
             }
-            // The TV uses a self-signed certificate; trust is established by pairing.
-            complete(true)
+            guard let certificate = box.value else { complete(false); return }
+            if acceptUnpairedServer {
+                // The pairing secret validates this certificate against the code shown on the TV.
+                complete(true)
+            } else {
+                let matches = try? ServerCertificateStore.matches(SecCertificateCopyData(certificate) as Data, host: host)
+                complete(matches == true)
+            }
         }, queue)
 
         let tcp = NWProtocolTCP.Options()
