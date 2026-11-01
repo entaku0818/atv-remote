@@ -70,3 +70,27 @@ xcodebuild archive -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote 
 - https://developer.apple.com/documentation/storekit/verificationresult
 - https://developer.apple.com/documentation/bundleresources/adding-a-privacy-manifest-to-your-app-or-third-party-sdk
 - https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype
+
+## 2026-11-02 検証結果
+
+| 検証 | 結果 |
+|---|---|
+| `swift build --package-path ATVRemoteKit` | 成功 |
+| `swift test --package-path ATVRemoteKit` | 12件成功、失敗0件 |
+| iPhone 18 Pro / iOS 27.0 のアプリ単体・統合テスト | 18件成功、`TEST SUCCEEDED` |
+| iPhone 18 Pro / iOS 27.0 のUIテスト | 設定・プライバシーとIP入力の2件成功 |
+| iPad / iOS 27.0 のUIテスト | 上記2件と購入画面の閉じる操作、計3件成功、`TEST SUCCEEDED` |
+| `swiftlint lint --no-cache` | 終了コード0、エラー0件、警告33件（主に既存の行長・末尾カンマ等） |
+| 実機向けReleaseの署名なしArchive | `ARCHIVE SUCCEEDED` |
+| Archive内の構成 | iOS 17以降・iPhone/iPad、バージョン1.0.0 (1)、Bonjour設定、PrivacyInfoとライセンス同梱を確認 |
+| テスト専用ファイル | Releaseアプリに.storekit / .xctestが含まれないことを確認 |
+| 実LANでのBonjour検索 | 10秒で検出結果なし。ネットワーク権限・TV側状態も影響するため、対応TVが存在しないとは断定しない |
+
+購入テストは本番課金ではなくStoreKitTestを使用。実際のStoreKit商品取得・購入・返金、および
+Keychain永続化、未登録／変更済みTV証明書の拒否をシミュレータで確認した。
+最初のiPad実行はケース成功後の後処理が待機したため停止し、`-enableCodeCoverage NO`で再実行して正常終了した。
+
+ローカルの詳細ログと接続画面画像: `ios/ATVRemote/build/verification/`（生成物のためGit管理外）。
+最終Archive: `ios/ATVRemote/build/ATVRemote.xcarchive`。
+Google TV実機操作、実際のApp Store Sandbox/TestFlight、配布署名、審査提出は未実施。
+**これらが完了するまで「公開可能」とは判定しない。**
