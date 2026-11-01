@@ -10,10 +10,8 @@ public final class PairingSession: @unchecked Sendable {
     private let clientName: String
     private let identity: ClientIdentity
     private let connection: ProtobufConnection
-    private let queue = DispatchQueue(label: "atvremotekit.pairing")
-
-    private var codeDisplayedContinuation: CheckedContinuation<Void, Error>?
-    private var finishedContinuation: CheckedContinuation<Void, Error>?
+    private let codeDisplayed = AsyncSignal()
+    private let finished = AsyncSignal()
 
     public init(host: String, port: UInt16 = 6467, clientName: String, identity: ClientIdentity) {
         self.host = host
@@ -28,14 +26,16 @@ public final class PairingSession: @unchecked Sendable {
         connection.onClosed = { [weak self] error in
             self?.fail(ATVError.connectionClosed(error?.localizedDescription ?? "closed"))
         }
-        try await connection.start()
-        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
-            queue.sync { self.codeDisplayedContinuation = cont }
+        do {
+            try await connection.start()
             var msg = newMessage()
             msg.pairingRequest.clientName = clientName
             msg.pairingRequest.serviceName = "atvremote"
-            ATVLog.info("pairing", "send pairing_request (client \(clientName))")
             send(msg)
+            try await codeDisplayed.wait()
+        } catch {
+            connection.cancel()
+            throw error
         }
     }
 
@@ -52,17 +52,16 @@ public final class PairingSession: @unchecked Sendable {
             serverModulus: serverModulus, serverExponent: serverExponent,
             pairingCode: code
         )
-        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
-            queue.sync { self.finishedContinuation = cont }
-            var msg = newMessage()
-            msg.secret.secret = secret
-            ATVLog.info("pairing", "send secret")
-            send(msg)
-        }
-        connection.cancel()
+        defer { connection.cancel() }
+        var msg = newMessage()
+        msg.secret.secret = secret
+        send(msg)
+        try await finished.wait()
     }
 
     public func cancel() {
+        codeDisplayed.resolve(.failure(CancellationError()))
+        finished.resolve(.failure(CancellationError()))
         ATVLog.info("pairing", "cancel requested")
         connection.cancel()
     }
@@ -118,21 +117,11 @@ public final class PairingSession: @unchecked Sendable {
     }
 
     private func resumeCodeDisplayed(_ error: Error?) {
-        queue.sync {
-            if let cont = codeDisplayedContinuation {
-                codeDisplayedContinuation = nil
-                if let error { cont.resume(throwing: error) } else { cont.resume() }
-            }
-        }
+        codeDisplayed.resolve(error.map { .failure($0) } ?? .success(()))
     }
 
     private func resumeFinished(_ error: Error?) {
-        queue.sync {
-            if let cont = finishedContinuation {
-                finishedContinuation = nil
-                if let error { cont.resume(throwing: error) } else { cont.resume() }
-            }
-        }
+        finished.resolve(error.map { .failure($0) } ?? .success(()))
     }
 
     private func fail(_ error: Error) {

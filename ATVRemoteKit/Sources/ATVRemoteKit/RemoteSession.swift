@@ -18,8 +18,7 @@ public final class RemoteSession: @unchecked Sendable {
     private var activeFeatures: UInt32 = requestedFeatures
 
     private let connection: ProtobufConnection
-    private let queue = DispatchQueue(label: "atvremotekit.remote")
-    private var startedContinuation: CheckedContinuation<Void, Error>?
+    private let started = AsyncSignal()
     private var isClosed = false
 
     public private(set) var deviceInfo: DeviceInfo?
@@ -54,15 +53,20 @@ public final class RemoteSession: @unchecked Sendable {
             self.resumeStarted(ATVError.connectionClosed(error?.localizedDescription ?? "closed"))
             self.onClosed?(error)
         }
-        try await connection.start()
-        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
-            queue.sync { self.startedContinuation = cont }
-            // The TV speaks first (remote_configure); nothing to send here.
+        do {
+            try await connection.start()
+            try await started.wait()
+        } catch {
+            connection.cancel()
+            throw error
         }
     }
 
     public func disconnect() {
         ATVLog.info("remote", "disconnect requested")
+        isConnected = false
+        isClosed = true
+        started.resolve(.failure(CancellationError()))
         connection.cancel()
     }
 
@@ -87,7 +91,7 @@ public final class RemoteSession: @unchecked Sendable {
         if !supportsAppLink {
             ATVLog.error("remote", "TV did not accept APP_LINK; launch request may be ignored")
         }
-        ATVLog.info("remote", "send app link \(appLink)")
+        ATVLog.info("remote", "send app link")
         var msg = Remote_RemoteMessage()
         msg.remoteAppLinkLaunchRequest.appLink = appLink
         send(msg)
@@ -165,12 +169,7 @@ public final class RemoteSession: @unchecked Sendable {
     }
 
     private func resumeStarted(_ error: Error?) {
-        queue.sync {
-            if let cont = startedContinuation {
-                startedContinuation = nil
-                if let error { cont.resume(throwing: error) } else { cont.resume() }
-            }
-        }
+        started.resolve(error.map { .failure($0) } ?? .success(()))
     }
 
     // "KEYCODE_DPAD_UP" ↔ enum case name helpers

@@ -42,9 +42,9 @@ public enum ATVLog {
     public static func log(_ level: Level, _ category: String, _ message: String) {
         let logger = Logger(subsystem: "ATVRemoteKit", category: category)
         switch level {
-        case .debug: logger.debug("\(message, privacy: .public)")
-        case .info: logger.info("\(message, privacy: .public)")
-        case .error: logger.error("\(message, privacy: .public)")
+        case .debug: logger.debug("\(message, privacy: .private)")
+        case .info: logger.info("\(message, privacy: .private)")
+        case .error: logger.error("\(message, privacy: .private)")
         }
         handler?(Entry(date: Date(), level: level, category: category, message: message))
     }

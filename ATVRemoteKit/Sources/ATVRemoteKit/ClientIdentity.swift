@@ -2,6 +2,7 @@ import Foundation
 import Security
 
 public enum ATVError: Error, LocalizedError {
+    case timedOut
     case keychain(OSStatus, String)
     case certificateCreation(String)
     case connectionClosed(String)
@@ -10,6 +11,7 @@ public enum ATVError: Error, LocalizedError {
 
     public var errorDescription: String? {
         switch self {
+        case .timedOut: return "TVの応答がありません。電源とネットワークを確認してください"
         case .keychain(let status, let msg): return "Keychain error \(status): \(msg)"
         case .certificateCreation(let msg): return "Certificate creation failed: \(msg)"
         case .connectionClosed(let msg): return "Connection closed: \(msg)"
@@ -34,7 +36,11 @@ public struct ClientIdentity {
 
     /// Loads the identity from the Keychain, generating key + certificate on first use.
     public static func loadOrCreate(label: String = defaultLabel, commonName: String = "atvremote") throws -> ClientIdentity {
-        if let existing = try? load(commonName: commonName) { return existing }
+        do {
+            return try load(commonName: commonName)
+        } catch ATVError.keychain(let status, _) where status == errSecItemNotFound {
+            // Only create a new identity when missing; a locked keychain is not a missing identity.
+        }
         try create(label: label, commonName: commonName)
         return try load(commonName: commonName)
     }
@@ -71,6 +77,7 @@ public struct ClientIdentity {
             kSecAttrKeySizeInBits as String: 2048,
             kSecPrivateKeyAttrs as String: [
                 kSecAttrIsPermanent as String: true,
+                kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
                 kSecAttrApplicationTag as String: Data(label.utf8),
             ],
         ]

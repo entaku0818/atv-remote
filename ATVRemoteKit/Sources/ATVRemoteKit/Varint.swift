@@ -21,9 +21,11 @@ enum Varint {
         var shift: UInt64 = 0
         var consumed = 0
         for byte in data {
+            guard shift < 63 else { return nil }
             result |= UInt64(byte & 0x7F) << shift
             consumed += 1
             if byte & 0x80 == 0 {
+                guard result <= UInt64(Int.max) else { return nil }
                 return (Int(result), consumed)
             }
             shift += 7
@@ -37,11 +39,20 @@ enum Varint {
 struct MessageFramer {
     private var buffer = Data()
 
-    mutating func append(_ data: Data) -> [Data] {
+    static let maximumMessageSize = 1_048_576
+
+    mutating func append(_ data: Data) throws -> [Data] {
         buffer.append(data)
         var messages: [Data] = []
-        while let (length, consumed) = Varint.decode(buffer),
-              buffer.count >= consumed + length {
+        while !buffer.isEmpty {
+            guard let (length, consumed) = Varint.decode(buffer) else {
+                if buffer.count >= 10 { throw ATVError.connectionClosed("invalid message length") }
+                break
+            }
+            guard length <= Self.maximumMessageSize else {
+                throw ATVError.connectionClosed("message too large")
+            }
+            guard buffer.count - consumed >= length else { break }
             let start = buffer.startIndex + consumed
             messages.append(Data(buffer[start..<start + length]))
             buffer.removeFirst(consumed + length)

@@ -59,45 +59,41 @@ final class ProtobufConnection: @unchecked Sendable {
     }
 
     func start() async throws {
-        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
-            var resumed = false
-            let label = label
-            connection.stateUpdateHandler = { [weak self] state in
-                switch state {
-                case .ready:
-                    ATVLog.info("connection", "\(label) ready (TLS established)")
-                    if !resumed { resumed = true; cont.resume() }
-                case .failed(let error):
-                    ATVLog.error("connection", "\(label) failed: \(error)")
-                    if !resumed { resumed = true; cont.resume(throwing: error) }
-                    self?.onClosed?(error)
-                case .cancelled:
-                    ATVLog.info("connection", "\(label) cancelled")
-                    if !resumed {
-                        resumed = true
-                        cont.resume(throwing: ATVError.connectionClosed("cancelled"))
-                    }
-                    self?.onClosed?(nil)
-                case .waiting(let error):
-                    ATVLog.error("connection", "\(label) waiting: \(error)")
-                case .preparing:
-                    ATVLog.debug("connection", "\(label) preparing")
-                default:
-                    break
-                }
+        let ready = AsyncSignal()
+        connection.stateUpdateHandler = { [weak self] state in
+            switch state {
+            case .ready:
+                ready.resolve(.success(()))
+            case .failed(let error), .waiting(let error):
+                ready.resolve(.failure(error))
+                self?.onClosed?(error)
+                self?.connection.cancel()
+            case .cancelled:
+                ready.resolve(.failure(CancellationError()))
+                self?.onClosed?(nil)
+            default: break
             }
-            ATVLog.info("connection", "\(label) connecting")
-            connection.start(queue: queue)
         }
-        receiveLoop()
+        connection.start(queue: queue)
+        do {
+            try await ready.wait()
+            receiveLoop()
+        } catch {
+            connection.cancel()
+            throw error
+        }
     }
 
     private func receiveLoop() {
         connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { [weak self] data, _, isComplete, error in
             guard let self else { return }
             if let data, !data.isEmpty {
-                for message in self.framer.append(data) {
-                    self.onMessage?(message)
+                do {
+                    for message in try self.framer.append(data) { self.onMessage?(message) }
+                } catch {
+                    self.onClosed?(error)
+                    self.connection.cancel()
+                    return
                 }
             }
             if let error {

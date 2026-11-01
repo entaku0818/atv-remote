@@ -11,20 +11,20 @@ final class VarintTests: XCTestCase {
         }
     }
 
-    func testFramerReassemblesSplitMessages() {
+    func testFramerReassemblesSplitMessages() throws {
         var framer = MessageFramer()
         let message = Data(repeating: 0xAB, count: 300)
         let framed = MessageFramer.frame(message)
         let mid = framed.count / 2
-        XCTAssertEqual(framer.append(framed.prefix(mid)), [])
-        XCTAssertEqual(framer.append(framed.suffix(framed.count - mid)), [message])
+        XCTAssertEqual(try framer.append(framed.prefix(mid)), [])
+        XCTAssertEqual(try framer.append(framed.suffix(framed.count - mid)), [message])
     }
 
-    func testFramerSplitsCoalescedMessages() {
+    func testFramerSplitsCoalescedMessages() throws {
         var framer = MessageFramer()
         let a = Data([0x01, 0x02])
         let b = Data([0x03])
-        let messages = framer.append(MessageFramer.frame(a) + MessageFramer.frame(b))
+        let messages = try framer.append(MessageFramer.frame(a) + MessageFramer.frame(b))
         XCTAssertEqual(messages, [a, b])
     }
 }
