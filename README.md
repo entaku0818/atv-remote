@@ -26,3 +26,14 @@ CIは `swiftlint` と `android` のみ。Swift package と iOSアプリは push 
 ## License
 
 MIT
+
+## iOS製品版の作業
+
+接続ガイド・IP入力・StoreKit 2買い切り課金・購入復元・プライバシー説明を追加しています。
+検証手順と公開前に必要な実機確認・ストア設定は [iOSリリース準備](docs/release/ios.md) を参照してください。
+
+```sh
+./scripts/verify-ios.sh 'platform=iOS Simulator,name=iPhone 18 Pro'
+```
+
+シミュレータのKeychainテストにはアドホック署名を使用します。生成するReleaseアーカイブは未署名で、ストアには送信しません。

@@ -65,3 +65,10 @@ ANDROID_HOME=/Users/entaku/Library/Android/sdk ./gradlew -Dorg.gradle.internal.h
 単体テストは7件（追加4件）、失敗0件・エラー0件。CLIコンパイル、Android lint、Debug APK生成に成功。
 APK: `android/app/build/outputs/apk/debug/app-debug.apk`。
 iOS/Swiftコードは変更しておらず、この作業でiOSビルドは実行していない。実機確認は未実施。
+
+## iOS版の更新
+
+上記の静的調査・Android着手時点からiOS実装が進んでいるため、現在のiOS状態は
+[リリース準備](docs/release/ios.md) を参照する。
+TV証明書照合、通信待ちの上限、接続ガイド、買い切り課金と復元、プライバシー情報、テストターゲットを追加。
+公開完了を意味するものではなく、Google TV実機・Sandbox/TestFlight・ストア設定は別途必要。
