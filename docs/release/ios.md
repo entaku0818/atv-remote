@@ -2,7 +2,7 @@
 
 ## 設定
 
-- アプリ名: ATV Remote（既存名を継続、公開前に確定）
+- アプリ名: ポケットリモコン（確定）
 - Bundle ID: `com.entaku.atvremote`（既存設定を継続、App Store Connectとの一致を確認）
 - 対象: iOS 17以降、iPhone / iPad、日本語
 - バージョン: 1.0.0 (1)
@@ -48,7 +48,7 @@ xcodebuild archive -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote 
 
 ## 公開前に残る外部設定
 
-1. アプリ名、Bundle ID、Product ID、無料範囲、サポート窓口を確定する。
+1. Bundle ID、Product ID、無料範囲、サポート窓口を確定する。
 2. App Store Connectに非消耗型商品を作成し、480円の価格・地域・審査用説明とスクリーンショットを設定する。
 3. サポートURLとプライバシーポリシーURLを公開する。原稿は `privacy-ja.md` と `store-ja.md`。
 4. App Privacy回答をアプリとSDKの実際の挙動と照合する。`PrivacyInfo.xcprivacy`はUserDefaults理由CA92.1、トラッキングなしを記載。

@@ -1,4 +1,4 @@
-# atv-remote
+# ポケットリモコン
 
 日本語 | [English](README.en.md)
 

@@ -32,7 +32,7 @@ targets:
     info:
       path: Info.plist
       properties:
-        CFBundleDisplayName: ATV Remote
+        CFBundleDisplayName: ポケットリモコン
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSApplicationCategoryType: public.app-category.utilities

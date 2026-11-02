@@ -68,7 +68,7 @@ struct DeviceListView: View {
                 }
                 Button("接続できないとき", systemImage: "questionmark.circle") { showHelp = true }
             }
-            .navigationTitle("ATV Remote")
+            .navigationTitle("ポケットリモコン")
             .navigationDestination(for: DeviceDiscovery.Device.self) { RemoteView(device: $0) }
             .toolbar {
                 Button("設定", systemImage: "gearshape") { showSettings = true }
