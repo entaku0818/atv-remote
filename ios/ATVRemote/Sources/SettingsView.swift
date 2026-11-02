@@ -63,7 +63,11 @@ struct PrivacyView: View {
                 )
             }
             Section("購入") {
-                Text("購入と復元にはAppleとRevenueCatを使用します。購入履歴と匿名のアプリユーザーIDをRevenueCatに送信し、購入の確認・復元・分析に使用します。カード番号などの支払い情報を開発者が受け取ることはありません。")
+                Text(
+                    "購入と復元にはAppleとRevenueCatを使用します。"
+                    + "購入履歴と匿名のアプリユーザーIDをRevenueCatに送信し、購入の確認・復元・分析に使用します。"
+                    + "カード番号などの支払い情報を開発者が受け取ることはありません。"
+                )
             }
         }
         .navigationTitle("プライバシー")

@@ -22,3 +22,11 @@ SDK 5.91.0 を固定。iOS本体の購入・復元・利用権限はRevenueCat�
 RevenueCatとの疎通・サーバー検証を保証するものではありません。本体には直接StoreKitで購入するクライアントを含めません。
 
 参考: [iOS SDK](https://www.revenuecat.com/docs/getting-started/installation/ios)、[App Privacy](https://www.revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy)
+
+## ローカル検証（2026-11-02）
+
+- アプリテスト20件が成功（購入状態、更新通知、復元、未設定キー、通信失敗時の状態維持を含む）。
+- xcodebuildは全件成功ログ出力後の終了処理で待機したため中断。コマンドの正常終了とは区別する。
+- 署名なしReleaseアーカイブ成功。Bundle IDとRevenueCatライセンス同梱を確認。
+- SwiftLint: エラー0、警告33（既存分）。
+- RevenueCatプロジェクト未作成・公開SDKキー未設定。RevenueCat/Sandboxの実購入疎通は未検証。

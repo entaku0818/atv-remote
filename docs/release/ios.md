@@ -8,7 +8,7 @@
 - バージョン: 1.0.0 (1)
 - 買い切り Product ID: `com.entaku.pocketremote.fullunlock`
 - 商品タイプ: Non-Consumable（非消耗型）、希望価格480円
-- アプリ画面の価格はStoreKitの`displayPrice`を使用。実際の価格・販売地域はApp Store Connectで設定する。
+- アプリ画面の価格はRevenueCatの`localizedPriceString`を使用。実際の価格・販売地域はApp Store Connectで設定する。
 - 無料機能案: TV検出、IP直接接続、ペアリング、方向キー、決定、戻る。
 - 購入で解除する機能案: ホーム、音量、消音、電源、URL起動。無料範囲はオーナー確認待ち。
 - Androidとの購入共有なし。購入復元には同じApple Accountを使用する。
@@ -60,7 +60,7 @@ xcodebuild archive -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote 
 - TV証明書はペアリングコード検証成功後にKeychainへ保存する。既存PoCからの初回更新では再ペアリングが必要。
 - 証明書をIPアドレスに関連付けるため、TVのIP変更後は再ペアリングが必要。
 - ログ画面はDebug限定。Releaseの統合ログはprivate扱い。URLは送信ログに出力しない。
-- 購入権利はStoreKitの検証済み取引から毎回判定し、UserDefaultsの購入フラグは使わない。
+- 購入権利はRevenueCatの `full_unlock` Entitlementから判定し、UserDefaultsの購入フラグは使わない。
 - 購入は無料確認後に利用者が明示的に選ぶ。接続成功やURLの再生成功を課金によって保証しない。
 
 ## 参照したApple資料
