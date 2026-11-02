@@ -12,4 +12,4 @@ xcodebuild test -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote \
 xcodebuild archive -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote \
   -configuration Release -destination 'generic/platform=iOS' \
   -derivedDataPath ios/ATVRemote/build/ReleaseDerivedData \
-  -archivePath ios/ATVRemote/build/ATVRemote.xcarchive CODE_SIGNING_ALLOWED=NO
+  -archivePath ios/ATVRemote/build/PocketRemote.xcarchive CODE_SIGNING_ALLOWED=NO

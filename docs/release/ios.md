@@ -3,10 +3,10 @@
 ## 設定
 
 - アプリ名: ポケットリモコン（確定）
-- Bundle ID: `com.entaku.atvremote`（既存設定を継続、App Store Connectとの一致を確認）
+- Bundle ID: `com.entaku.pocketremote`（App Store Connectにも同じIDで登録する）
 - 対象: iOS 17以降、iPhone / iPad、日本語
 - バージョン: 1.0.0 (1)
-- 買い切り Product ID: `com.entaku.atvremote.fullunlock`
+- 買い切り Product ID: `com.entaku.pocketremote.fullunlock`
 - 商品タイプ: Non-Consumable（非消耗型）、希望価格480円
 - アプリ画面の価格はStoreKitの`displayPrice`を使用。実際の価格・販売地域はApp Store Connectで設定する。
 - 無料機能案: TV検出、IP直接接続、ペアリング、方向キー、決定、戻る。
@@ -25,7 +25,7 @@ xcodebuild test -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote \
   -derivedDataPath ios/ATVRemote/DerivedData -parallel-testing-enabled NO CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
 xcodebuild archive -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote \
   -configuration Release -destination 'generic/platform=iOS' \
-  -archivePath ios/ATVRemote/build/ATVRemote.xcarchive CODE_SIGNING_ALLOWED=NO
+  -archivePath ios/ATVRemote/build/PocketRemote.xcarchive CODE_SIGNING_ALLOWED=NO
 ```
 
 `Tests/Local.storekit` はローカル課金検証専用。本番商品を作成する設定ではない。
@@ -91,6 +91,15 @@ Keychain永続化、未登録／変更済みTV証明書の拒否をシミュレ�
 最初のiPad実行はケース成功後の後処理が待機したため停止し、`-enableCodeCoverage NO`で再実行して正常終了した。
 
 ローカルの詳細ログと接続画面画像: `ios/ATVRemote/build/verification/`（生成物のためGit管理外）。
-最終Archive: `ios/ATVRemote/build/ATVRemote.xcarchive`。
+最終Archive: `ios/ATVRemote/build/PocketRemote.xcarchive`。
 Google TV実機操作、実際のApp Store Sandbox/TestFlight、配布署名、審査提出は未実施。
 **これらが完了するまで「公開可能」とは判定しない。**
+
+## ポケットリモコンへのID変更（2026-11-02）
+
+Bundle IDを `com.entaku.pocketremote`、非消耗型商品IDを `com.entaku.pocketremote.fullunlock` に変更。
+テストターゲット、ローカルStoreKit設定、公開資料を同時に更新した。
+新IDで17件のアプリテストが成功し、ローカルStoreKit設定の内部IDを旧アプリから分離した後、
+購入・返金の統合テストも `TEST SUCCEEDED` を確認した。
+`PocketRemote.xcarchive` の生成に成功し、Info.plistのBundle IDと実行ファイル内の商品IDが新IDであることを確認済み。
+App Store Connect側のアプリ・商品登録は未実施。

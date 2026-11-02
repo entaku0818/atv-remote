@@ -19,7 +19,7 @@ protocol PurchaseClient {
 
 @MainActor
 final class StoreKitClient: PurchaseClient {
-    static let productID = "com.entaku.atvremote.fullunlock"
+    static let productID = "com.entaku.pocketremote.fullunlock"
     private var product: Product?
 
     func offer() async throws -> PurchaseOffer? {
