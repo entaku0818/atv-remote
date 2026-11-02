@@ -103,3 +103,8 @@ Bundle IDを `com.entaku.pocketremote`、非消耗型商品IDを `com.entaku.poc
 購入・返金の統合テストも `TEST SUCCEEDED` を確認した。
 `PocketRemote.xcarchive` の生成に成功し、Info.plistのBundle IDと実行ファイル内の商品IDが新IDであることを確認済み。
 App Store Connect側のアプリ・商品登録は未実施。
+
+## RevenueCat移行
+
+現在の購入実装はRevenueCatです。[設定手順](revenuecat.md)に従って公開SDKキーと `full_unlock` を設定してください。
+従来のローカルStoreKitテスト成功はRevenueCatの購入確認を保証しません。Sandbox確認がリリース前に必要です。

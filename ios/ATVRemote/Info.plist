@@ -28,6 +28,8 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Android TVを検索・操作するためにローカルネットワークを使用します。</string>
+	<key>RevenueCatPublicAPIKey</key>
+	<string>$(REVENUECAT_PUBLIC_API_KEY)</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 </dict>

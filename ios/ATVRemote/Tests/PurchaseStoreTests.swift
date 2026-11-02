@@ -84,6 +84,33 @@ final class PurchaseStoreTests: XCTestCase {
         XCTAssertFalse(store.isUnlocked)
     }
 
+    func testNetworkFailurePreservesLastKnownEntitlement() async {
+        let client = FakePurchaseClient()
+        client.entitled = true
+        let store = PurchaseStore(client: client)
+        await store.refreshEntitlement()
+        client.entitlementError = PurchaseError.unavailable
+        client.entitled = false
+        await store.refreshEntitlement()
+        XCTAssertTrue(store.isUnlocked)
+        XCTAssertNotNil(store.message)
+        client.entitlementError = nil
+        await store.refreshEntitlement()
+        XCTAssertFalse(store.isUnlocked)
+    }
+
+    func testMissingRevenueCatConfigurationCannotUnlockOrOfferPurchase() async {
+        for key in ["", "test_example", "sk_secret", "$(REVENUECAT_PUBLIC_API_KEY)"] {
+            let store = PurchaseStore(client: RevenueCatClient(apiKey: key))
+            await store.load()
+            XCTAssertFalse(store.isUnlocked)
+            XCTAssertNil(store.offer)
+            XCTAssertNotNil(store.message)
+            await store.restore()
+            XCTAssertFalse(store.isUnlocked)
+        }
+    }
+
     func testMissingProductCannotStartPurchase() async {
         let client = FakePurchaseClient()
         client.product = nil
@@ -101,6 +128,7 @@ private final class FakePurchaseClient: PurchaseClient {
     var product: PurchaseOffer? = PurchaseOffer(price: "¥480")
     var entitled = false
     var outcome = PurchaseOutcome.purchased
+    var entitlementError: Error?
     var offerError: Error?
     var purchaseError: Error?
     var restoreError: Error?
@@ -110,7 +138,10 @@ private final class FakePurchaseClient: PurchaseClient {
         if let offerError { throw offerError }
         return product
     }
-    func hasEntitlement() async -> Bool { entitled }
+    func hasEntitlement() async throws -> Bool {
+        if let entitlementError { throw entitlementError }
+        return entitled
+    }
     func purchase() async throws -> PurchaseOutcome {
         purchaseCount += 1
         if let purchaseError { throw purchaseError }

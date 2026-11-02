@@ -51,7 +51,7 @@ struct PrivacyView: View {
     var body: some View {
         List {
             Section("収集するデータ") {
-                Text("このアプリには広告やアクセス解析を組み込んでいません。開発者のサーバーへ接続情報や操作履歴を送信しません。")
+                Text("このアプリには広告を組み込んでいません。購入履歴はRevenueCatで購入管理・分析に使用します。開発者のサーバーへ接続情報や操作履歴を送信しません。")
             }
             Section("TVとの通信") {
                 Text("ローカルネットワーク上でTVを検索し、暗号化した接続で操作や入力したURLをTVに送信します。URLを受け取ったTV上のサービスには、それぞれのプライバシーポリシーが適用されます。")
@@ -63,7 +63,7 @@ struct PrivacyView: View {
                 )
             }
             Section("購入") {
-                Text("購入と復元にはAppleのStoreKitを使用します。支払い情報を開発者が受け取ることはありません。購入の確認にはApp Storeとの通信が必要になる場合があります。")
+                Text("購入と復元にはAppleとRevenueCatを使用します。購入履歴と匿名のアプリユーザーIDをRevenueCatに送信し、購入の確認・復元・分析に使用します。カード番号などの支払い情報を開発者が受け取ることはありません。")
             }
         }
         .navigationTitle("プライバシー")
@@ -117,7 +117,7 @@ struct UpgradeView: View {
 }
 
 struct LicenseView: View {
-    private let names = ["ATVRemote", "SwiftProtobuf"]
+    private let names = ["ATVRemote", "SwiftProtobuf", "RevenueCat"]
 
     var body: some View {
         ScrollView {
