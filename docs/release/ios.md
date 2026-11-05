@@ -22,7 +22,7 @@ swiftlint lint
 xcodegen generate --spec ios/ATVRemote/project.yml
 xcodebuild test -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote \
   -destination 'platform=iOS Simulator,name=iPhone 18 Pro' \
-  -derivedDataPath ios/ATVRemote/DerivedData -parallel-testing-enabled NO CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
+  -derivedDataPath ios/ATVRemote/DerivedData -parallel-testing-enabled NO -enableCodeCoverage NO CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
 xcodebuild archive -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote \
   -configuration Release -destination 'generic/platform=iOS' \
   -archivePath ios/ATVRemote/build/PocketRemote.xcarchive CODE_SIGNING_ALLOWED=NO
@@ -108,3 +108,39 @@ App Store Connect側のアプリ・商品登録は未実施。
 
 現在の購入実装はRevenueCatです。[設定手順](revenuecat.md)に従って公開SDKキーと `full_unlock` を設定してください。
 従来のローカルStoreKitテスト成功はRevenueCatの購入確認を保証しません。Sandbox確認がリリース前に必要です。
+
+## 配布用の準備（2026-11-05）
+
+RevenueCatプロジェクト・商品・Entitlementを作成し、公開SDKキーを設定済み。
+入稿用の日本語原稿は `ios/ATVRemote/fastlane/metadata/ja/` に用意。
+アプリ名・サブタイトル・キーワードの文字数検証済み。サポートURL、プライバシーURL、スクリーンショットは別途必要。
+
+署名付きArchiveとローカルIPAの生成（アップロード・審査提出はしない）:
+
+```sh
+DEVELOPMENT_TEAM=4YZQY4C47E bash scripts/archive-ios.sh
+```
+
+出力先: `ios/ATVRemote/build/distribution/`。Apple側Bundle ID登録とXcodeのアカウント認証が必要。
+全ローカル検証は `bash scripts/verify-ios.sh`。カバレッジ収集を無効化して実行する。
+
+### 今回のローカル検証
+
+`bash scripts/verify-ios.sh` のテスト工程:
+
+- Swift package: `Executed 12 tests, with 0 failures`。
+- アプリ単体・統合: `Executed 20 tests, with 0 failures`。
+- UI: `Executed 3 tests, with 0 failures`。
+- カバレッジ無効化後: `** TEST SUCCEEDED **` を確認。
+- SwiftLint: `Done linting! Found 33 violations, 0 serious in 32 files.`。
+
+カバレッジ有効時は全ケース成功後の終了処理で待機し中断したため、検証スクリプトに
+`-enableCodeCoverage NO` を追加。公開SDKキーを含む状態で上記テストを再実行した。
+詳細ログ: `/tmp/pocketremote-verify-ios-final.log`（ローカルのみ）。
+
+署名付き配布ビルドも `DEVELOPMENT_TEAM=4YZQY4C47E bash scripts/archive-ios.sh` で実行し、
+`** ARCHIVE SUCCEEDED **` / `** EXPORT SUCCEEDED **`、終了コード0を確認。
+IPAは `ios/ATVRemote/build/distribution/export/ATVRemote.ipa`。
+Archiveの署名検証に成功。Bundle ID、1.0.0 (1)、iOS 17以降、Apple公開SDKキー、
+プライバシーマニフェスト同梱、テスト用.storekit/.xctest未同梱を確認した。
+これは配布ファイルの生成成功であり、App Store Connectアプリ作成・アップロード・実機受け入れの完了ではない。

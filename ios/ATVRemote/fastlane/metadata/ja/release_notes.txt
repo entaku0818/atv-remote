@@ -1,0 +1,2 @@
+ポケットリモコンの初回リリースです。
+同じネットワーク上のGoogle TV / Android TVを検索し、iPhone・iPadから操作できます。
