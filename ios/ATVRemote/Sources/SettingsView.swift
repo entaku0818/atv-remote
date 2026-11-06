@@ -1,10 +1,8 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @EnvironmentObject private var purchases: PurchaseStore
     @Environment(\.dismiss) private var dismiss
     @State private var confirmClear = false
-    @State private var showUpgrade = false
 
     private var appVersion: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
@@ -13,17 +11,9 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("購入") {
-                    Label(purchases.isUnlocked ? "すべての機能が利用できます" : "無料で動作確認できます",
-                          systemImage: purchases.isUnlocked ? "checkmark.seal" : "appletvremote.gen4")
-                    if !purchases.isUnlocked { Button("買い切りで全機能を解除") { showUpgrade = true } }
-                    Button("購入を復元") { Task { await purchases.restore() } }
-                        .disabled(purchases.isBusy)
-                    if let message = purchases.message { Text(message).font(.footnote) }
-                }
                 Section("端末内のデータ") {
                     Button("URLの履歴を消去", role: .destructive) { confirmClear = true }
-                    Text("接続用の鍵はこの端末のKeychainに、URL履歴はこの端末内に保存します。履歴を消しても購入は失われません。")
+                    Text("接続用の鍵はこの端末のKeychainに、URL履歴はこの端末内に保存します。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
                 Section("このアプリについて") {
@@ -39,7 +29,6 @@ struct SettingsView: View {
             }
             .navigationTitle("設定")
             .toolbar { Button("閉じる") { dismiss() } }
-            .sheet(isPresented: $showUpgrade) { UpgradeView() }
             .confirmationDialog("URL履歴をすべて消去しますか？", isPresented: $confirmClear, titleVisibility: .visible) {
                 Button("履歴を消去", role: .destructive) { LinkHistory.shared.clear() }
             }
@@ -51,7 +40,7 @@ struct PrivacyView: View {
     var body: some View {
         List {
             Section("収集するデータ") {
-                Text("このアプリには広告を組み込んでいません。購入履歴はRevenueCatで購入管理・分析に使用します。開発者のサーバーへ接続情報や操作履歴を送信しません。")
+                Text("このアプリには広告・分析SDKを組み込んでいません。開発者のサーバーへ接続情報や操作履歴を送信しません。")
             }
             Section("TVとの通信") {
                 Text("ローカルネットワーク上でTVを検索し、暗号化した接続で操作や入力したURLをTVに送信します。URLを受け取ったTV上のサービスには、それぞれのプライバシーポリシーが適用されます。")
@@ -62,66 +51,14 @@ struct PrivacyView: View {
                     + "端末のバックアップ設定によってURL履歴がバックアップされる場合があります。"
                 )
             }
-            Section("購入") {
-                Text(
-                    "購入と復元にはAppleとRevenueCatを使用します。"
-                    + "購入履歴と匿名のアプリユーザーIDをRevenueCatに送信し、購入の確認・復元・分析に使用します。"
-                    + "カード番号などの支払い情報を開発者が受け取ることはありません。"
-                )
-            }
         }
         .navigationTitle("プライバシー")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-struct UpgradeView: View {
-    @EnvironmentObject private var purchases: PurchaseStore
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    Image(systemName: "appletvremote.gen4.fill").font(.largeTitle).foregroundStyle(.tint)
-                    Text("毎日の操作を、これひとつで。") .font(.largeTitle.bold())
-                    Text("買い切り・月額料金なし") .font(.headline)
-                    Label("ホーム・音量・電源の操作", systemImage: "tv")
-                    Label("動画URLをTVで開く", systemImage: "play.tv")
-                    Text("先に無料の方向キー・決定・戻るでTVが動くことを確認してください。電源・音量・URL起動の対応はTVによって異なります。")
-                        .foregroundStyle(.secondary)
-                    if purchases.isUnlocked {
-                        Label("すべての機能が利用できます", systemImage: "checkmark.seal.fill")
-                    } else if let offer = purchases.offer {
-                        Button("\(offer.price)で全機能を解除") { Task { await purchases.purchase() } }
-                            .buttonStyle(.borderedProminent)
-                            .disabled(purchases.isBusy)
-                    } else {
-                        Button("購入情報を再読み込み") { Task { await purchases.load() } }
-                            .disabled(purchases.isBusy)
-                    }
-                    if purchases.isBusy { ProgressView("確認中…") }
-                    if let message = purchases.message {
-                        Text(message).font(.callout).accessibilityIdentifier("purchaseMessage")
-                    }
-                    Button("購入を復元") { Task { await purchases.restore() } }.disabled(purchases.isBusy)
-                    Text("同じApple Accountで購入を復元できます。Android版の購入とは別です。")
-                        .font(.footnote).foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: 500, alignment: .leading)
-                .padding(24)
-                .frame(maxWidth: .infinity)
-            }
-            .navigationTitle("全機能を解除")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar { Button("閉じる") { dismiss() } }
-            .task { await purchases.load() }
-        }
-    }
-}
-
 struct LicenseView: View {
-    private let names = ["ATVRemote", "SwiftProtobuf", "RevenueCat"]
+    private let names = ["ATVRemote", "SwiftProtobuf"]
 
     var body: some View {
         ScrollView {

@@ -24,7 +24,7 @@ struct DeviceListView: View {
                             .font(.title2.bold())
                         Text("iPhoneとTVを同じネットワークにつなぎ、TVの電源を入れてください。")
                             .foregroundStyle(.secondary)
-                        Label("接続と基本操作は無料で確認できます", systemImage: "checkmark.shield")
+                        Label("アプリ内課金なしですべての機能が使えます", systemImage: "checkmark.shield")
                             .font(.footnote)
                     }
                     .padding(.vertical, 12)
@@ -117,7 +117,7 @@ struct ConnectionHelpView: View {
                 Section("対応について") {
                     Text(
                         "Android TV Remote Serviceに対応したGoogle TV / Android TVが対象です。"
-                        + "すべての機種での動作は保証されません。購入前に無料の方向キー・決定・戻るで動作を確認してください。"
+                        + "すべての機種での動作は保証されません。電源・音量・URL起動の対応はTVによって異なります。"
                     )
                     Text("TVがネットワークから切断されると、アプリから電源を入れられない場合があります。音量操作の動作もTVや音響機器の構成によって異なります。")
                 }

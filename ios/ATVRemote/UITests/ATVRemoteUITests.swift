@@ -7,22 +7,11 @@ final class ATVRemoteUITests: XCTestCase {
         let settings = app.buttons["settings"]
         XCTAssertTrue(settings.waitForExistence(timeout: 10))
         settings.tap()
-        let restore = app.buttons["購入を復元"]
-        XCTAssertTrue(restore.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["プライバシーについて"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["購入を復元"].exists)
+        XCTAssertFalse(app.buttons["買い切りで全機能を解除"].exists)
         app.buttons["プライバシーについて"].tap()
         XCTAssertTrue(app.staticTexts["収集するデータ"].waitForExistence(timeout: 5))
-    }
-
-    func testUpgradeCanBeDismissedWithoutBuying() {
-        let app = XCUIApplication()
-        app.launch()
-        let settings = app.buttons["settings"]
-        XCTAssertTrue(settings.waitForExistence(timeout: 10))
-        settings.tap()
-        app.buttons["買い切りで全機能を解除"].tap()
-        XCTAssertTrue(app.staticTexts["買い切り・月額料金なし"].waitForExistence(timeout: 5))
-        app.navigationBars.buttons["閉じる"].firstMatch.tap()
-        XCTAssertTrue(app.buttons["購入を復元"].waitForExistence(timeout: 5))
     }
 
     func testInvalidManualAddressDoesNotOfferConnection() {

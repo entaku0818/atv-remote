@@ -7,8 +7,6 @@ struct RemoteView: View {
     @StateObject private var history = LinkHistory.shared
     @Environment(\.scenePhase) private var scenePhase
     @State private var appLinkURL = ""
-    @EnvironmentObject private var purchases: PurchaseStore
-    @State private var showUpgrade = false
 
     init(device: DeviceDiscovery.Device) {
         self.device = device
@@ -23,15 +21,8 @@ struct RemoteView: View {
                     resultView
                     dpadView
                     systemKeysView
-                    if purchases.isUnlocked {
-                        volumeView
-                        appLinkView
-                    } else {
-                        Button("全機能を解除", systemImage: "lock.open") { showUpgrade = true }
-                            .buttonStyle(.bordered)
-                        Text("方向キー・決定・戻るは無料で使えます。")
-                            .font(.footnote).foregroundStyle(.secondary)
-                    }
+                    volumeView
+                    appLinkView
                 }
                 #if DEBUG
                 DiagnosticsView()
@@ -41,7 +32,6 @@ struct RemoteView: View {
         }
         .navigationTitle(device.name)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showUpgrade) { UpgradeView() }
         .task { await viewModel.connect() }
         .onDisappear { viewModel.disconnect() }
         .onChange(of: scenePhase) { _, phase in
@@ -133,12 +123,12 @@ struct RemoteView: View {
                 Label("戻る", systemImage: "arrow.uturn.backward")
             }
             Button {
-                premiumKey(.keycodeHome, label: "ホーム")
+                viewModel.send(.keycodeHome, label: "ホーム")
             } label: {
-                Label("ホーム", systemImage: purchases.isUnlocked ? "house" : "lock")
+                Label("ホーム", systemImage: "house")
             }
             Button {
-                premiumKey(.keycodePower, label: "電源")
+                viewModel.send(.keycodePower, label: "電源")
             } label: {
                 Label("電源", systemImage: "power")
             }
@@ -160,7 +150,6 @@ struct RemoteView: View {
                 historyMenu
             }
             Button {
-                guard purchases.isUnlocked else { showUpgrade = true; return }
                 viewModel.launch(appLinkURL)
             } label: {
                 Label("TVで開く", systemImage: "play.tv")
@@ -241,17 +230,13 @@ struct RemoteView: View {
 
     private var volumeView: some View {
         HStack {
-            Button("音量を下げる", systemImage: "speaker.minus") { premiumKey(.keycodeVolumeDown, label: "音量を下げる") }
-            Button("消音", systemImage: "speaker.slash") { premiumKey(.keycodeVolumeMute, label: "消音") }
-            Button("音量を上げる", systemImage: "speaker.plus") { premiumKey(.keycodeVolumeUp, label: "音量を上げる") }
+            Button("音量を下げる", systemImage: "speaker.minus") { viewModel.send(.keycodeVolumeDown, label: "音量を下げる") }
+            Button("消音", systemImage: "speaker.slash") { viewModel.send(.keycodeVolumeMute, label: "消音") }
+            Button("音量を上げる", systemImage: "speaker.plus") { viewModel.send(.keycodeVolumeUp, label: "音量を上げる") }
         }
         .labelStyle(.iconOnly)
         .buttonStyle(.bordered)
         .controlSize(.large)
     }
 
-    private func premiumKey(_ key: Remote_RemoteKeyCode, label: String) {
-        guard purchases.isUnlocked else { showUpgrade = true; return }
-        viewModel.send(key, label: label)
-    }
 }
