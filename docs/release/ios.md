@@ -61,3 +61,12 @@ TVが電源OFF時にネットワーク接続を停止する場合は電源ON操�
 - TV実機検証、App Store Connect価格設定、TestFlightアップロードは未実施。
 
 ローカルログ: `/tmp/pocketremote-paid-verify.log`、`/tmp/pocketremote-paid-distribution.log`。
+
+## 審査提出準備（2026-11-07）
+
+- Release構成のSimulator用ビルド成功。iPhone 18 Pro MaxとiPad Pro 13インチでホーム画面を撮影。
+- LAN上のTV検出を確認。ペアリングとTV操作の実機受け入れは未完了。
+- 撮影画像はTVのローカルアドレスを含むため、`build/release-screenshot-drafts/` に確認用として保存（Git管理外・未入稿）。
+- 審査用の操作手順を `fastlane/metadata/review_information/notes.txt` に用意。
+- サポート原稿を [support-ja.md](support-ja.md) に用意。問い合わせ先が未設定のため未公開。
+- App Store Connectはログアウト状態。アプリ登録・価格設定・IPAアップロード・審査提出は未実施。
