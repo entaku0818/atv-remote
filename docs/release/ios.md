@@ -59,7 +59,7 @@ TVが電源OFF時にネットワーク接続を停止する場合は電源ON操�
 - SwiftLint: 33 warnings / 0 serious（既存警告）。
 - 署名付き配布Archive: `** ARCHIVE SUCCEEDED **`、IPA: `** EXPORT SUCCEEDED **`、終了コード0。
 - Archiveのバージョン1.0.0 (2)、RevenueCat公開キー・リソース・StoreKitフィクスチャの未同梱を確認。
-- TV実機検証、App Store Connect価格設定、TestFlightアップロードは未実施。
+- TV実機検証、App Store Connect価格設定は未完了。IPAアップロード結果は下記を参照。
 
 ローカルログ: `/tmp/pocketremote-paid-verify.log`、`/tmp/pocketremote-paid-distribution.log`。
 
@@ -74,3 +74,10 @@ TVが電源OFF時にネットワーク接続を停止する場合は電源ON操�
 - バージョン1.0.0、日本語説明・キーワード・サブタイトル・著作権を保存済み。
 - 初回アップロードで画面回転設定不足（90474）を検出。全4方向をInfo.plistに追加し、署名付きArchive・IPA再生成成功。
 - 480円の価格設定、公開URL、スクリーンショット、実機受け入れ、審査提出は未完了。
+
+## IPAアップロード（2026-11-07）
+
+- 修正版1.0.0 (2)のアップロード成功: `UPLOAD SUCCEEDED with no errors`。
+- Delivery UUID: `eddee20d-e035-4bdd-a960-8a7866b34887`。
+- ログ: `/tmp/pocketremote-upload-retry.log`。
+- 直後のAPI確認ではビルド一覧は空。Apple側の処理・TestFlightへの反映待ち。審査には未提出。
