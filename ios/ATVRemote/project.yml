@@ -40,6 +40,11 @@ targets:
         NSBonjourServices:
           - _androidtvremote2._tcp
         UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
   ATVRemoteTests:
     type: bundle.unit-test
     platform: iOS

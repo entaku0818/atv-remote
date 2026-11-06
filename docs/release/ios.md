@@ -23,7 +23,8 @@ IPA: `ios/ATVRemote/build/distribution/export/ATVRemote.ipa`。
 
 ## 公開前の残作業
 
-- App Store Connectにアプリを登録し、日本でのアプリ価格を480円に設定する。IAP商品は追加しない。
+- 日本でのアプリ価格を480円に設定する。IAP商品は追加しない。
+- 更新された有料App契約へのAccount Holderの同意が必要。
 - サポートURL、問い合わせ先、プライバシーポリシーURLを用意する。
 - ストアスクリーンショット、年齢区分、権利表記、暗号化輸出コンプライアンスを確認する。
 - App Privacy回答をSDK撤去後の挙動に合わせる。アプリは購入履歴・匿名顧客IDを送信しない。
@@ -69,4 +70,7 @@ TVが電源OFF時にネットワーク接続を停止する場合は電源ON操�
 - 撮影画像はTVのローカルアドレスを含むため、`build/release-screenshot-drafts/` に確認用として保存（Git管理外・未入稿）。
 - 審査用の操作手順を `fastlane/metadata/review_information/notes.txt` に用意。
 - サポート原稿を [support-ja.md](support-ja.md) に用意。問い合わせ先が未設定のため未公開。
-- App Store Connectはログアウト状態。アプリ登録・価格設定・IPAアップロード・審査提出は未実施。
+- App Store Connect登録済み: [ポケットリモコン](https://appstoreconnect.apple.com/apps/6831694414/distribution)、App ID `6831694414`。
+- バージョン1.0.0、日本語説明・キーワード・サブタイトル・著作権を保存済み。
+- 初回アップロードで画面回転設定不足（90474）を検出。全4方向をInfo.plistに追加し、署名付きArchive・IPA再生成成功。
+- 480円の価格設定、公開URL、スクリーンショット、実機受け入れ、審査提出は未完了。
