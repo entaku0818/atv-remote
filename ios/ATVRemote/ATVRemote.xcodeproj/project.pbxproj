@@ -1,0 +1,608 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		11D8ACBCDF73B03D320FBECB /* ATVRemoteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA4491BBEAD7AD62A216687 /* ATVRemoteUITests.swift */; };
+		3028BEFF76D3D7F01F685977 /* ATVRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4664435F1B7E83B3420217C /* ATVRemoteApp.swift */; };
+		4F1F49A8EF32EADA2F3F828E /* ATVRemoteKit in Frameworks */ = {isa = PBXBuildFile; productRef = A4A2B49AA87E85AE7091FCA1 /* ATVRemoteKit */; };
+		538B0A620B447B3D096BAB9F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14A018F2EEDB49706559063 /* SettingsView.swift */; };
+		53DDD180E9214670D680EDF2 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E965A523E5513A08CDCB6162 /* DiagnosticsView.swift */; };
+		6B32A0A98AC128ED60FA424A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B2C19090D9ECF5C6562706B8 /* PrivacyInfo.xcprivacy */; };
+		70844404F1ED19708966D6E1 /* AppBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F402563FA3EEBBF3786D38 /* AppBehaviorTests.swift */; };
+		AB89AFBC344AC6AB0DAE848F /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7FC57B6396AA0C8C21D49 /* LogStore.swift */; };
+		BF8CD307F20ACCCC68D22294 /* RemoteInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB82ADB870979D337FBD849 /* RemoteInput.swift */; };
+		C118008CBB53372FC0F48E3E /* ATVRemote-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = BD78178E8D7D440A30AC70FF /* ATVRemote-LICENSE.txt */; };
+		CE670A0FD400A06467548A82 /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C73D4403D179E4E9E5737F /* DeviceListView.swift */; };
+		D1B74C3B4D3A93E374C934CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2723DBD1F48FB12D8A2F3078 /* Assets.xcassets */; };
+		E0D3E76893A4269D12E1C3D8 /* LinkHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FAD701DBF416AA5004A3686 /* LinkHistory.swift */; };
+		ECA014C1A4A3CB12C6B81F3D /* SwiftProtobuf-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 88FC54DAFED601A3341A7143 /* SwiftProtobuf-LICENSE.txt */; };
+		ECD403F6BAFF060AD473A4E4 /* RemoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39FF96BD136E16F0859228E /* RemoteView.swift */; };
+		F7B2DDAA4C4709F0412C1705 /* RemoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 582FD865858A5F843613F20B /* RemoteViewModel.swift */; };
+		FBD5F5ECC07390D183588A6B /* KeychainIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDE4EBD9B6025C744497C09 /* KeychainIntegrationTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		518002108F0E78BE0A9B608A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6843524F711A7041117AA08A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 539AA59854C6C1EB214DDEA0;
+			remoteInfo = ATVRemote;
+		};
+		C319F95EB3AA11015D9893AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6843524F711A7041117AA08A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 539AA59854C6C1EB214DDEA0;
+			remoteInfo = ATVRemote;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0EB7FC57B6396AA0C8C21D49 /* LogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStore.swift; sourceTree = "<group>"; };
+		0FAD701DBF416AA5004A3686 /* LinkHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHistory.swift; sourceTree = "<group>"; };
+		2723DBD1F48FB12D8A2F3078 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		51F402563FA3EEBBF3786D38 /* AppBehaviorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBehaviorTests.swift; sourceTree = "<group>"; };
+		582FD865858A5F843613F20B /* RemoteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteViewModel.swift; sourceTree = "<group>"; };
+		6EC002076561F72790D0ACD8 /* ATVRemoteKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ATVRemoteKit; path = ../../ATVRemoteKit; sourceTree = SOURCE_ROOT; };
+		88FC54DAFED601A3341A7143 /* SwiftProtobuf-LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "SwiftProtobuf-LICENSE.txt"; sourceTree = "<group>"; };
+		8DA4491BBEAD7AD62A216687 /* ATVRemoteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATVRemoteUITests.swift; sourceTree = "<group>"; };
+		8E4C46BE99B2DA8B56FD4EF1 /* ATVRemoteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ATVRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A945FAFEB12A3F0E5A017CCC /* ATVRemoteUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ATVRemoteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEDE4EBD9B6025C744497C09 /* KeychainIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainIntegrationTests.swift; sourceTree = "<group>"; };
+		B2C19090D9ECF5C6562706B8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		BD78178E8D7D440A30AC70FF /* ATVRemote-LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ATVRemote-LICENSE.txt"; sourceTree = "<group>"; };
+		BEB82ADB870979D337FBD849 /* RemoteInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteInput.swift; sourceTree = "<group>"; };
+		C14A018F2EEDB49706559063 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C2C73D4403D179E4E9E5737F /* DeviceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
+		C39FF96BD136E16F0859228E /* RemoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteView.swift; sourceTree = "<group>"; };
+		D4664435F1B7E83B3420217C /* ATVRemoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATVRemoteApp.swift; sourceTree = "<group>"; };
+		E965A523E5513A08CDCB6162 /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
+		EACA9D7F899C0F7AEF7AAA32 /* ATVRemote.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ATVRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B1DF78330BC7C79D31F501D2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F1F49A8EF32EADA2F3F828E /* ATVRemoteKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0B16180FE782255E7A50EDB5 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				8DA4491BBEAD7AD62A216687 /* ATVRemoteUITests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		259357E782DD3A7F15A0BCBF = {
+			isa = PBXGroup;
+			children = (
+				C457164367550A1E156187D6 /* Packages */,
+				60CA9B5F747089B447DFC41F /* Resources */,
+				D82DA9E61E1A4CA8717814EE /* Sources */,
+				DA4CFD23A780C507F874FA49 /* Tests */,
+				0B16180FE782255E7A50EDB5 /* UITests */,
+				31527ECCD22A7F9C1B320FEF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		31527ECCD22A7F9C1B320FEF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EACA9D7F899C0F7AEF7AAA32 /* ATVRemote.app */,
+				8E4C46BE99B2DA8B56FD4EF1 /* ATVRemoteTests.xctest */,
+				A945FAFEB12A3F0E5A017CCC /* ATVRemoteUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		60CA9B5F747089B447DFC41F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2723DBD1F48FB12D8A2F3078 /* Assets.xcassets */,
+				BD78178E8D7D440A30AC70FF /* ATVRemote-LICENSE.txt */,
+				B2C19090D9ECF5C6562706B8 /* PrivacyInfo.xcprivacy */,
+				88FC54DAFED601A3341A7143 /* SwiftProtobuf-LICENSE.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		C457164367550A1E156187D6 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				6EC002076561F72790D0ACD8 /* ATVRemoteKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		D82DA9E61E1A4CA8717814EE /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D4664435F1B7E83B3420217C /* ATVRemoteApp.swift */,
+				C2C73D4403D179E4E9E5737F /* DeviceListView.swift */,
+				E965A523E5513A08CDCB6162 /* DiagnosticsView.swift */,
+				0FAD701DBF416AA5004A3686 /* LinkHistory.swift */,
+				0EB7FC57B6396AA0C8C21D49 /* LogStore.swift */,
+				BEB82ADB870979D337FBD849 /* RemoteInput.swift */,
+				C39FF96BD136E16F0859228E /* RemoteView.swift */,
+				582FD865858A5F843613F20B /* RemoteViewModel.swift */,
+				C14A018F2EEDB49706559063 /* SettingsView.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		DA4CFD23A780C507F874FA49 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				51F402563FA3EEBBF3786D38 /* AppBehaviorTests.swift */,
+				AEDE4EBD9B6025C744497C09 /* KeychainIntegrationTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2C8C563979C4E2398BF2D306 /* ATVRemoteUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D22F257C1475107D72302F8 /* Build configuration list for PBXNativeTarget "ATVRemoteUITests" */;
+			buildPhases = (
+				5EBCA5FE2F1B8C547A459499 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				960A2E8E2D90727AE4B28256 /* PBXTargetDependency */,
+			);
+			name = ATVRemoteUITests;
+			packageProductDependencies = (
+			);
+			productName = ATVRemoteUITests;
+			productReference = A945FAFEB12A3F0E5A017CCC /* ATVRemoteUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		539AA59854C6C1EB214DDEA0 /* ATVRemote */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8D43DB6332FE7BFF57D3D235 /* Build configuration list for PBXNativeTarget "ATVRemote" */;
+			buildPhases = (
+				58FA2AAB1DA65B9AA568406B /* Sources */,
+				853566F28FFA48B368F95029 /* Resources */,
+				B1DF78330BC7C79D31F501D2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ATVRemote;
+			packageProductDependencies = (
+				A4A2B49AA87E85AE7091FCA1 /* ATVRemoteKit */,
+			);
+			productName = ATVRemote;
+			productReference = EACA9D7F899C0F7AEF7AAA32 /* ATVRemote.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EBA8EABD6FBBE77B3D341CD6 /* ATVRemoteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F20FB83AB995AC5D804AFF52 /* Build configuration list for PBXNativeTarget "ATVRemoteTests" */;
+			buildPhases = (
+				444261EFC078F7BEF77DCAEE /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6766F19AFB0A8D2283C17294 /* PBXTargetDependency */,
+			);
+			name = ATVRemoteTests;
+			packageProductDependencies = (
+			);
+			productName = ATVRemoteTests;
+			productReference = 8E4C46BE99B2DA8B56FD4EF1 /* ATVRemoteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6843524F711A7041117AA08A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					2C8C563979C4E2398BF2D306 = {
+						TestTargetID = 539AA59854C6C1EB214DDEA0;
+					};
+					539AA59854C6C1EB214DDEA0 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 6F86134E75B7713D05975649 /* Build configuration list for PBXProject "ATVRemote" */;
+			developmentRegion = ja;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				ja,
+			);
+			mainGroup = 259357E782DD3A7F15A0BCBF;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6A38B288C941EE89D5D4B417 /* XCLocalSwiftPackageReference "../../ATVRemoteKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 31527ECCD22A7F9C1B320FEF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				539AA59854C6C1EB214DDEA0 /* ATVRemote */,
+				EBA8EABD6FBBE77B3D341CD6 /* ATVRemoteTests */,
+				2C8C563979C4E2398BF2D306 /* ATVRemoteUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		853566F28FFA48B368F95029 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C118008CBB53372FC0F48E3E /* ATVRemote-LICENSE.txt in Resources */,
+				D1B74C3B4D3A93E374C934CF /* Assets.xcassets in Resources */,
+				6B32A0A98AC128ED60FA424A /* PrivacyInfo.xcprivacy in Resources */,
+				ECA014C1A4A3CB12C6B81F3D /* SwiftProtobuf-LICENSE.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		444261EFC078F7BEF77DCAEE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70844404F1ED19708966D6E1 /* AppBehaviorTests.swift in Sources */,
+				FBD5F5ECC07390D183588A6B /* KeychainIntegrationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58FA2AAB1DA65B9AA568406B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3028BEFF76D3D7F01F685977 /* ATVRemoteApp.swift in Sources */,
+				CE670A0FD400A06467548A82 /* DeviceListView.swift in Sources */,
+				53DDD180E9214670D680EDF2 /* DiagnosticsView.swift in Sources */,
+				E0D3E76893A4269D12E1C3D8 /* LinkHistory.swift in Sources */,
+				AB89AFBC344AC6AB0DAE848F /* LogStore.swift in Sources */,
+				BF8CD307F20ACCCC68D22294 /* RemoteInput.swift in Sources */,
+				ECD403F6BAFF060AD473A4E4 /* RemoteView.swift in Sources */,
+				F7B2DDAA4C4709F0412C1705 /* RemoteViewModel.swift in Sources */,
+				538B0A620B447B3D096BAB9F /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5EBCA5FE2F1B8C547A459499 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11D8ACBCDF73B03D320FBECB /* ATVRemoteUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6766F19AFB0A8D2283C17294 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 539AA59854C6C1EB214DDEA0 /* ATVRemote */;
+			targetProxy = C319F95EB3AA11015D9893AB /* PBXContainerItemProxy */;
+		};
+		960A2E8E2D90727AE4B28256 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 539AA59854C6C1EB214DDEA0 /* ATVRemote */;
+			targetProxy = 518002108F0E78BE0A9B608A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0501005AE13D26687DC24A94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.pocketremote.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ATVRemote.app/ATVRemote";
+			};
+			name = Debug;
+		};
+		0979A8A4DB608C3B6E62F709 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Android TVを検索・操作するためにローカルネットワークを使用します。";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.pocketremote;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3115AD4BC5B215CE47DF2233 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.pocketremote.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ATVRemote;
+			};
+			name = Debug;
+		};
+		40A9B101370B0A4331344A13 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Android TVを検索・操作するためにローカルネットワークを使用します。";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.pocketremote;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4431C64250C4388A916B71B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		6553726EE4FC0CD54A7AA95D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.pocketremote.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ATVRemote.app/ATVRemote";
+			};
+			name = Release;
+		};
+		837D44C968450D8E31B28722 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.pocketremote.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ATVRemote;
+			};
+			name = Release;
+		};
+		D15918C73603BFD642167018 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6D22F257C1475107D72302F8 /* Build configuration list for PBXNativeTarget "ATVRemoteUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3115AD4BC5B215CE47DF2233 /* Debug */,
+				837D44C968450D8E31B28722 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6F86134E75B7713D05975649 /* Build configuration list for PBXProject "ATVRemote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D15918C73603BFD642167018 /* Debug */,
+				4431C64250C4388A916B71B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8D43DB6332FE7BFF57D3D235 /* Build configuration list for PBXNativeTarget "ATVRemote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0979A8A4DB608C3B6E62F709 /* Debug */,
+				40A9B101370B0A4331344A13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F20FB83AB995AC5D804AFF52 /* Build configuration list for PBXNativeTarget "ATVRemoteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0501005AE13D26687DC24A94 /* Debug */,
+				6553726EE4FC0CD54A7AA95D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		6A38B288C941EE89D5D4B417 /* XCLocalSwiftPackageReference "../../ATVRemoteKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../ATVRemoteKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A4A2B49AA87E85AE7091FCA1 /* ATVRemoteKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ATVRemoteKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 6843524F711A7041117AA08A /* Project object */;
+}

@@ -6,7 +6,7 @@ Android TV Remote Protocol v2 の PoC と、iOS/Androidリモコンアプリ化�
 
 - Lint (SwiftLint): `swiftlint lint`
 - Swift package build/test: `cd ATVRemoteKit && swift build && swift test`
-- iOS app build: `cd ios/ATVRemote && xcodegen generate && xcodebuild build -project ATVRemote.xcodeproj -scheme ATVRemote -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO`
+- iOS app build: `cd ios/ATVRemote && xcodebuild build -project ATVRemote.xcodeproj -scheme ATVRemote -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO`
 - Android unit test: `cd android && ./gradlew :atvremotekit:test`
 - Android cli compile: `cd android && ./gradlew :cli:compileKotlin`
 - Android app lint: `cd android && ./gradlew :app:lintDebug`
@@ -26,7 +26,7 @@ CIで回るのは `swiftlint` と `android`（どちらもubuntu-latest）だけ
 - 提案がある場合は実装せず、issue コメントか報告として出す
 
 ### ハーネス（検証ゲート）
-- 実装は build / test / lint が緑になるまで自己修正する（コマンド: `swiftlint lint` / `cd ATVRemoteKit && swift build && swift test` / `cd ios/ATVRemote && xcodegen generate && xcodebuild build -project ATVRemote.xcodeproj -scheme ATVRemote -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO` / `cd android && ./gradlew :atvremotekit:test :cli:compileKotlin :app:lintDebug :app:assembleDebug`）
+- 実装は build / test / lint が緑になるまで自己修正する（コマンド: `swiftlint lint` / `cd ATVRemoteKit && swift build && swift test` / `cd ios/ATVRemote && xcodebuild build -project ATVRemote.xcodeproj -scheme ATVRemote -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO` / `cd android && ./gradlew :atvremotekit:test :cli:compileKotlin :app:lintDebug :app:assembleDebug`）
 - このうちCIが自動で検証するのは `swiftlint lint` と Android の4コマンドのみ。**Swift package と iOSアプリはローカル実行が唯一のゲート**なので省略しない
 - **緑でない変更を main に入れない**。5回で緑にならなければブランチに残して報告
 - 完了報告には実行した検証コマンドと実出力を含める（「たぶん動く」は完了ではない）

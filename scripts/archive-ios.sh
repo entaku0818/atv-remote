@@ -3,7 +3,6 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 : "${DEVELOPMENT_TEAM:?Set DEVELOPMENT_TEAM to your Apple Developer team ID}"
-xcodegen generate --spec ios/ATVRemote/project.yml
 build_dir="$PWD/ios/ATVRemote/build/distribution"
 mkdir -p "$build_dir"
 build_args=("DEVELOPMENT_TEAM=$DEVELOPMENT_TEAM")

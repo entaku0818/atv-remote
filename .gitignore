@@ -3,7 +3,8 @@ certs/
 __pycache__/
 .build/
 DerivedData/
-*.xcodeproj
+xcuserdata/
+*.xcuserstate
 
 .atvremote/
 

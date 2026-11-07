@@ -5,7 +5,6 @@ destination="${1:-platform=iOS Simulator,name=iPhone 18 Pro}"
 swiftlint lint --no-cache
 swift build --package-path ATVRemoteKit
 swift test --package-path ATVRemoteKit
-xcodegen generate --spec ios/ATVRemote/project.yml
 xcodebuild test -project ios/ATVRemote/ATVRemote.xcodeproj -scheme ATVRemote \
   -destination "$destination" -derivedDataPath ios/ATVRemote/DerivedData \
   -parallel-testing-enabled NO -enableCodeCoverage NO CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES

@@ -9,6 +9,12 @@
 - 購入後は最初から全機能を利用可能。アプリ内課金・月額料金・購入復元UIなし。
 - RevenueCat SDK・購入チェックを撤去。旧RevenueCatプロジェクトは履歴として残すが利用しない。
 
+## Xcodeプロジェクト管理
+
+`ios/ATVRemote/ATVRemote.xcodeproj` をGitで直接管理する。XcodeGenは不要。
+ターゲット・ファイル追加・ビルド設定はXcodeで編集し、共有スキームとともにコミットする。
+`Info.plist` は直接編集する。ユーザー固有の `xcuserdata` はコミットしない。
+
 ## ローカル検証と配布
 
 ```sh
