@@ -22,7 +22,7 @@ struct DeviceListView: View {
                             .accessibilityHidden(true)
                         Text("いつものTVを、手のひらから。")
                             .font(.title2.bold())
-                        Text("iPhoneとTVを同じネットワークにつなぎ、TVの電源を入れてください。")
+                        Text("まずTV本体や付属リモコンで電源を入れ、iPhoneと同じWi-Fi（ネットワーク）につないでください。接続中のTVをアプリが検索します。")
                             .foregroundStyle(.secondary)
                         Label("アプリ内課金なしですべての機能が使えます", systemImage: "checkmark.shield")
                             .font(.footnote)
@@ -32,7 +32,7 @@ struct DeviceListView: View {
                 Section("近くのTV") {
                     if devices.isEmpty {
                         Label("TVを探しています", systemImage: "wifi")
-                        Text(errorMessage ?? "見つからない場合は、Wi-Fiとローカルネットワークの許可を確認してください。")
+                        Text(errorMessage ?? "電源OFFでネットワーク接続が切れているTVは見つかりません。TVの電源・Wi-Fi接続と、iPhoneのローカルネットワークの許可を確認してください。")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -101,7 +101,8 @@ struct ConnectionHelpView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("1. TVとiPhoneを同じネットワークへ") {
+                Section("1. TVの電源を入れ、同じWi-Fiへ") {
+                    Text("まずTV本体や付属リモコンで電源を入れ、iPhoneと同じWi-Fi（ネットワーク）に接続してください。TVがネットワークにつながっていると、アプリで検索できます。電源OFF時にネットワーク接続が切れるTVは、アプリから発見したり電源を入れたりできません。")
                     Text("TVのネットワーク初期設定が済んでいる必要があります。リモコンをなくしてTVがWi-Fiに接続できない場合、このアプリだけで初期設定はできません。")
                     Text("ゲストWi-Fi、VPN、ルーターの端末間通信制限によってTVが見つからない場合があります。")
                 }
