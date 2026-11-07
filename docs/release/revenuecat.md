@@ -47,3 +47,9 @@ RevenueCatとの疎通・サーバー検証を保証するものではありま�
 - Apple側の商品登録・価格設定、Sandbox購入、復元、返金検証は未完了。
 
 [商品とEntitlementの設定](https://app.revenuecat.com/projects/8a47872c/product-catalog/products/prod2180daa4c3)
+
+## 現行方針の記録（2026-11-07）
+
+ユーザー確認により、RevenueCatには設定の記録だけを残す。SDK再導入・IAP追加は行わない。
+プロジェクト `8a47872c` の管理名を「ポケットリモコン（有料DL・480円予定・IAPなし）」に変更し、保存成功を確認。
+480円は販売予定価格であり、App Store Connectでの設定確認は別途必要。旧IAP商品は履歴として残っており、現行アプリでは使用しない。

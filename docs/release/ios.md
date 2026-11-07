@@ -88,4 +88,4 @@ TVが電源OFF時にネットワーク接続を停止する場合は電源ON操�
 - ログ: `/tmp/pocketremote-upload-retry.log`。
 - 後続のAPI確認でビルド2は `VALID` / `APP_STORE_ELIGIBLE`。Apple側処理完了。審査には未提出。
 - ストアのプライマリカテゴリを `UTILITIES` に保存し、読み戻し確認済み。
-- RevenueCat追加の依頼あり。480円の有料ダウンロード方針との関係を確認中。販売方式変更・SDK再導入は未実施。
+- RevenueCatは現在の販売方針の記録のみとユーザー確認済み。有料ダウンロード・追加課金なしを維持し、SDKは再導入しない。
