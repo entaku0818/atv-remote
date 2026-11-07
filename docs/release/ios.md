@@ -130,3 +130,12 @@ TVが電源OFF時にネットワーク接続を停止する場合は電源ON操�
 - 元画像と再生成手順は `scripts/screenshots/`、入稿画像は `ios/ATVRemote/fastlane/screenshots/ja/`。
 - 申請チェックでコンテンツ配信権回答と一部画像の処理完了待ちが表示された。配信権回答はユーザー確認待ち。
 - 有料アプリ契約は画面上「有効（新規契約が利用可能）」。新規契約の同意は実施していない。
+
+## 審査申請完了（2026-11-07 23:17 JST）
+
+- ユーザー承認に基づき `contentRightsDeclaration=DOES_NOT_USE_THIRD_PARTY_CONTENT` を登録し、APIで読み戻し確認。
+- スクリーンショット6枚すべての処理状態 `COMPLETE` を確認。
+- バージョン1.0.0（ビルド3）をApp Store審査に提出。画面で「1項目が提出されました」を確認。
+- APIで `appStoreState=WAITING_FOR_REVIEW` / `appVersionState=WAITING_FOR_REVIEW` を確認。
+- `releaseType=AFTER_APPROVAL`：承認後に自動公開。現在は審査待ちで、まだ一般公開されていない。
+- 日本480円、全175か国・地域の配信設定を維持。
