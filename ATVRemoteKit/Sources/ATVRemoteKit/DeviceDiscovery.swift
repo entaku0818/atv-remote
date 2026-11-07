@@ -10,6 +10,13 @@ public final class DeviceDiscovery: @unchecked Sendable {
         public let port: UInt16?
         public let endpoint: NWEndpoint
 
+        #if DEBUG
+        public static var screenshotSample: Device {
+            Device(name: "リビングのTV", host: "192.0.2.10", port: 6466,
+                   endpoint: .hostPort(host: "192.0.2.10", port: 6466))
+        }
+        #endif
+
         public static func manual(host: String) -> Device {
             Device(name: host, host: host, port: 6466, endpoint: .hostPort(host: .init(host), port: 6466))
         }

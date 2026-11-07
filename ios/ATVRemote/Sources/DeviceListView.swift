@@ -85,6 +85,12 @@ struct DeviceListView: View {
     }
 
     private func startSearch() {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--store-screenshots") {
+            devices = [.screenshotSample]
+            return
+        }
+        #endif
         errorMessage = nil
         devices = []
         discovery.start(onError: { message in

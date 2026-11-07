@@ -10,7 +10,14 @@ struct RemoteView: View {
 
     init(device: DeviceDiscovery.Device) {
         self.device = device
-        _viewModel = StateObject(wrappedValue: RemoteViewModel(host: device.host ?? ""))
+        let model = RemoteViewModel(host: device.host ?? "")
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--store-screenshots") {
+            model.phase = .connected
+            model.deviceDescription = "Google TV"
+        }
+        #endif
+        _viewModel = StateObject(wrappedValue: model)
     }
 
     var body: some View {
@@ -25,14 +32,21 @@ struct RemoteView: View {
                     appLinkView
                 }
                 #if DEBUG
-                DiagnosticsView()
+                if !ProcessInfo.processInfo.arguments.contains("--store-screenshots") {
+                    DiagnosticsView()
+                }
                 #endif
             }
             .padding()
         }
         .navigationTitle(device.name)
         .navigationBarTitleDisplayMode(.inline)
-        .task { await viewModel.connect() }
+        .task {
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--store-screenshots") { return }
+            #endif
+            await viewModel.connect()
+        }
         .onDisappear { viewModel.disconnect() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
