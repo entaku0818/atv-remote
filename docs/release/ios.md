@@ -86,4 +86,6 @@ TVが電源OFF時にネットワーク接続を停止する場合は電源ON操�
 - 修正版1.0.0 (2)のアップロード成功: `UPLOAD SUCCEEDED with no errors`。
 - Delivery UUID: `eddee20d-e035-4bdd-a960-8a7866b34887`。
 - ログ: `/tmp/pocketremote-upload-retry.log`。
-- 直後のAPI確認ではビルド一覧は空。Apple側の処理・TestFlightへの反映待ち。審査には未提出。
+- 後続のAPI確認でビルド2は `VALID` / `APP_STORE_ELIGIBLE`。Apple側処理完了。審査には未提出。
+- ストアのプライマリカテゴリを `UTILITIES` に保存し、読み戻し確認済み。
+- RevenueCat追加の依頼あり。480円の有料ダウンロード方針との関係を確認中。販売方式変更・SDK再導入は未実施。
