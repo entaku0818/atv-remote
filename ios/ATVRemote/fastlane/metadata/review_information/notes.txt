@@ -1,14 +1,31 @@
-ログインやアカウント登録は不要です。アプリ内課金はありません。
-本アプリは、同一ローカルネットワークに接続されたGoogle TV / Android TVを操作するユーティリティです。
-TVはネットワーク設定済みでAndroid TV Remote Serviceに対応している必要があります。
+Purpose and intended audience
+Pocket Remote is a consumer utility for people who own a compatible Google TV / Android TV and want to use an iPhone or iPad as an additional remote control. It provides directional navigation, OK, Back, Home, volume, mute, power commands, and sending a URL to a compatible app installed on the TV. It does not provide or stream video content.
 
-確認手順:
-1. iPhone/iPadと対応TVを同じネットワークに接続します。
-2. アプリのローカルネットワークアクセスを許可します。
-3. 検出されたTVを選択します。必要に応じてTVのIPアドレスを直接入力できます。
-4. TV画面に表示される6文字のペアリングコードを入力します。
-5. 方向キー・決定・戻る・ホーム・音量・電源・URL送信を確認します。
+Setup and main user flow
+1. Use the TV's physical controls or original remote to turn on the TV. Complete the TV's network setup first.
+2. Connect the iPhone/iPad and TV to the same local network. The TV must support Android TV Remote Service. Guest networks or network isolation can prevent communication.
+3. Launch Pocket Remote and allow Local Network access when prompted.
+4. Select the discovered TV. If discovery is unavailable, enter the TV's IP address from its network settings.
+5. Enter the six-character pairing code shown on the TV.
+6. Use the directional buttons and OK to navigate the TV, then Back and Home. Test volume and mute where supported by the TV/audio setup.
+7. Optionally enter a URL supported by an app installed on the TV and tap the button to open it on the TV. The TV app determines whether the URL can be opened; playback of every URL is not guaranteed.
+Power commands depend on the TV. A TV that disconnects from the network when powered off cannot be discovered or powered on by this app. This app cannot perform the initial network setup of an offline TV.
+Settings, the connection guide, privacy information, and manual IP entry are available without a TV. Reviewing the remote-control functionality requires a compatible physical TV on the same network.
 
-設定、プライバシー説明、接続ガイド、IP入力はTVなしでも確認できます。
-電源・音量・URL起動の対応はTVとインストール済みアプリに依存します。
-ネットワーク未設定のTVの初期設定は本アプリでは行えません。
+Accounts, paid features, and user content
+There is no account registration, login, or account deletion flow because this app has no user accounts. No demo credentials or sample files are required. There is no user-content publishing, sharing community, messaging, or content feed. A user-entered URL is sent to the user's TV; it is not published to other users.
+The app is a paid download. All features are available immediately after installation. There are no in-app purchases, subscriptions, paywalls, or additional feature unlocks.
+
+External services, tools, and platforms
+- A compatible Google TV / Android TV running Android TV Remote Service is required for the core remote functionality.
+- Discovery uses Bonjour/mDNS on the local network. Pairing and remote commands use local TLS connections to the TV (ports 6467 and 6466 respectively).
+- Apple Network, Security, and CryptoKit frameworks provide networking and cryptographic operations. SwiftProtobuf is a bundled open-source library for protocol messages, not a hosted service.
+- There is no developer-operated backend, cloud authentication, advertising SDK, analytics SDK, or AI service. RevenueCat is not integrated into the submitted app.
+- Apple handles the paid app download through the App Store.
+- Opening a URL depends on apps installed on the TV and any separate accounts/subscriptions those apps require. Pocket Remote does not provide those subscriptions or bypass access restrictions.
+
+Regional behavior
+Pocket Remote's own functionality is the same in all regions; it does not apply region-specific feature gates or provide a regional content catalog. Its interface is currently Japanese. Compatible TV apps, their URL handling, and content availability can differ by device, provider, and region. App Store prices vary by storefront.
+
+Regulated services and third-party material
+The app is a remote-control utility, not a service in a highly regulated industry. It does not bundle, host, license, or distribute third-party video, music, or images. It does not bypass DRM or provide access to protected content. Google TV / Android TV references describe compatibility; the app does not claim affiliation with Google or TV manufacturers.
