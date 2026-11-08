@@ -1,31 +1,36 @@
-Purpose and intended audience
-Pocket Remote is a consumer utility for people who own a compatible Google TV / Android TV and want to use an iPhone or iPad as an additional remote control. It provides directional navigation, OK, Back, Home, volume, mute, power commands, and sending a URL to a compatible app installed on the TV. It does not provide or stream video content.
+Physical-device demonstration — Guideline 2.1
+Attached: PocketRemote-iPhoneAir-iOS27-Build3.mp4 (72 seconds).
+Device: iPhone Air, iOS 27. App: 1.0.0 (3), installed via TestFlight. Device/OS/build details were confirmed by the developer.
+The recording starts on the initial TV-discovery screen immediately after launch; the tap that launches the app is not included. It shows TV selection, entry of the TV pairing code, successful connection, directional/OK/Home commands, volume controls, and opening Settings. The app reports a Xiaomi MiTV-MOSR4 TV; the foreground TV app changes during the demonstration. This is a physical-device screen recording, not a simulator or screenshot-demo mode. The TV display itself is not filmed.
 
-Setup and main user flow
-1. Use the TV's physical controls or original remote to turn on the TV. Complete the TV's network setup first.
+Purpose and audience
+Pocket Remote is a consumer utility for owners of compatible Google TV / Android TV devices who want to use an iPhone or iPad as an additional remote. It provides directional navigation, OK, Back, Home, volume, mute, power commands, and sending a URL to a compatible app on the TV. It does not provide or stream video content.
+
+Setup and main features
+1. Turn on the TV using its physical controls or original remote. Complete its network setup first.
 2. Connect the iPhone/iPad and TV to the same local network. The TV must support Android TV Remote Service. Guest networks or network isolation can prevent communication.
-3. Launch Pocket Remote and allow Local Network access when prompted.
-4. Select the discovered TV. If discovery is unavailable, enter the TV's IP address from its network settings.
+3. Launch Pocket Remote and allow Local Network access.
+4. Select the discovered TV, or enter its IP address from the TV's network settings.
 5. Enter the six-character pairing code shown on the TV.
-6. Use the directional buttons and OK to navigate the TV, then Back and Home. Test volume and mute where supported by the TV/audio setup.
-7. Optionally enter a URL supported by an app installed on the TV and tap the button to open it on the TV. The TV app determines whether the URL can be opened; playback of every URL is not guaranteed.
-Power commands depend on the TV. A TV that disconnects from the network when powered off cannot be discovered or powered on by this app. This app cannot perform the initial network setup of an offline TV.
-Settings, the connection guide, privacy information, and manual IP entry are available without a TV. Reviewing the remote-control functionality requires a compatible physical TV on the same network.
+6. Use directional buttons and OK to navigate, then Back and Home. Volume and mute depend on the TV/audio setup.
+7. Optionally enter a URL supported by an app installed on the TV and tap “TVで開く”. The TV app determines URL support; not every URL can be played.
+Power behavior depends on the TV. A TV that disconnects from the network when off cannot be discovered or powered on by this app. This app cannot perform an offline TV's initial network setup.
+Settings, connection help, privacy information, and IP entry can be viewed without a TV. Core remote functionality requires a compatible physical TV on the same network.
 
-Accounts, paid features, and user content
-There is no account registration, login, or account deletion flow because this app has no user accounts. No demo credentials or sample files are required. There is no user-content publishing, sharing community, messaging, or content feed. A user-entered URL is sent to the user's TV; it is not published to other users.
-The app is a paid download. All features are available immediately after installation. There are no in-app purchases, subscriptions, paywalls, or additional feature unlocks.
+Accounts, payment, and user content
+No registration, login, or user accounts exist, so account deletion and demo credentials are not applicable. No sample files are required. There is no community, messaging, content feed, or user-content publishing. Entered URLs are sent only to the user's TV, not published to other users.
+This is a paid app download. All features are available after installation. There are no in-app purchases, subscriptions, paywalls, or feature unlocks.
 
 External services, tools, and platforms
-- A compatible Google TV / Android TV running Android TV Remote Service is required for the core remote functionality.
-- Discovery uses Bonjour/mDNS on the local network. Pairing and remote commands use local TLS connections to the TV (ports 6467 and 6466 respectively).
-- Apple Network, Security, and CryptoKit frameworks provide networking and cryptographic operations. SwiftProtobuf is a bundled open-source library for protocol messages, not a hosted service.
-- There is no developer-operated backend, cloud authentication, advertising SDK, analytics SDK, or AI service. RevenueCat is not integrated into the submitted app.
-- Apple handles the paid app download through the App Store.
-- Opening a URL depends on apps installed on the TV and any separate accounts/subscriptions those apps require. Pocket Remote does not provide those subscriptions or bypass access restrictions.
+- Google TV / Android TV with Android TV Remote Service.
+- Bonjour/mDNS discovery; local TLS pairing and remote connections to TV ports 6467 and 6466.
+- Apple Network, Security, and CryptoKit frameworks; bundled SwiftProtobuf open-source protocol library.
+- No developer-operated backend, cloud authentication, ads, analytics SDK, or AI service. RevenueCat is not integrated.
+- Apple handles the paid download through the App Store.
+- URL opening depends on installed TV apps and their separate accounts/subscriptions. Pocket Remote does not provide subscriptions or bypass access restrictions.
 
 Regional behavior
-Pocket Remote's own functionality is the same in all regions; it does not apply region-specific feature gates or provide a regional content catalog. Its interface is currently Japanese. Compatible TV apps, their URL handling, and content availability can differ by device, provider, and region. App Store prices vary by storefront.
+The app's own functionality is identical across regions, with no regional feature gates or content catalog. The interface is Japanese. TV apps, URL support, and third-party content availability may differ by device, provider, and region. Prices vary by storefront.
 
 Regulated services and third-party material
-The app is a remote-control utility, not a service in a highly regulated industry. It does not bundle, host, license, or distribute third-party video, music, or images. It does not bypass DRM or provide access to protected content. Google TV / Android TV references describe compatibility; the app does not claim affiliation with Google or TV manufacturers.
+This is a remote-control utility, not a highly regulated service. It does not bundle, host, or distribute third-party videos, music, or images, bypass DRM, or grant access to protected content. Google TV / Android TV references describe compatibility, not affiliation with Google or TV manufacturers.
