@@ -27,6 +27,6 @@ TV自体がネットワーク未設定の場合、このアプリだけでは初
 
 運営者: Takuya Endo
 
-メール: [entaku19890818@gmail.com](mailto:entaku19890818@gmail.com?subject=ポケットリモコンのお問い合わせ)
+メール: [support@entaku.app](mailto:support@entaku.app?subject=ポケットリモコンのお問い合わせ)
 お問い合わせの際は、TVの型番・OS、iPhone / iPadの機種・OS、アプリのバージョンと症状をお知らせください。
 ペアリングコードや秘密鍵を送る必要はありません。

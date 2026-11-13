@@ -22,6 +22,6 @@ TVや動画サービスでのデータの扱いには、それぞれのサービ
 
 運営者: Takuya Endo
 
-メール: [entaku19890818@gmail.com](mailto:entaku19890818@gmail.com?subject=ポケットリモコンのお問い合わせ)
+メール: [support@entaku.app](mailto:support@entaku.app?subject=ポケットリモコンのお問い合わせ)
 
 最終更新日: 2026年11月7日
